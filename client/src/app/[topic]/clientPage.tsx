@@ -1,7 +1,7 @@
 "use client"
 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { scaleLog } from "@visx/scale"
 import { Wordcloud } from "@visx/wordcloud"
 import { Text } from "@visx/text";
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
+import { io } from "socket.io-client"
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
@@ -22,6 +23,21 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
+
+
+  const socket = io("http://localhost:5000")
+
+  
+
+  useEffect(()=>{
+    socket.emit("join-room",`room:${topicName}`);
+  },[])
+
+  useEffect(()=>{
+   socket.on("room-update",(message : string) =>{
+     console.log('room update received',message)
+   })
+  },[])
 
 
   const fontScale = scaleLog({
@@ -85,7 +101,7 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
             />
             <Button
               disabled={isPending}
-              onClick={() => mutate({comment : input , topicName})}
+              onClick={() => { mutate({comment : input , topicName}); setInput('')}}
             >
               Share
             </Button>

@@ -68,7 +68,7 @@ export const submitComment = async ({
         ))
     )
 
-    await redis.incr("served-requests")
+    await redis.incr("served-request")
 
     await redis.publish(`room ${topicName}`,words)
 
