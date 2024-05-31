@@ -21,6 +21,7 @@ const TopicCreator = () => {
           onChange={({ target }) => setInput(target.value)}
           className="bg-white min-w-64"
           placeholder="Enter topic here..."
+          
         />
         <Button
         disabled={isPending}
