@@ -20,11 +20,7 @@ const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: {
-    origin: "https://realtime-webapp.vercel.app",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors:corsOptions,
 })
 
 subRedis.on("message", (channel, message) => {
