@@ -31,7 +31,7 @@ subRedis.on("error", (err) => {
 io.on("connection",async (socket) =>{
 
   const { id } = socket;
-  console.log(socket.id);
+  // console.log(socket.id);
 
   socket.on("join-room", async (room : string) =>{
     console.log("joined room : ",room)

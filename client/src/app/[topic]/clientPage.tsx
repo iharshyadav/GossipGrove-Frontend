@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
+const socket = io("http://localhost:5000")
+
 interface clientPageProps {
   initialData: { text: string; value: number }[];
   topicName: string;
@@ -25,19 +27,52 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
   const [input,setInput] = useState<string>("")
 
 
-  const socket = io("http://localhost:5000")
-
-  
-
   useEffect(()=>{
     socket.emit("join-room",`room:${topicName}`);
   },[])
 
+
+  // parsing the data from the message into JSON.
+  // mapping the data in which we are checking if that word exist.
+  // if its already exist then we are incrementing that word.
+  // we are setting the word while giving condition first finding the word and then filtering the whole array that does not contain that word
+  // then returning the fitered array and incrementing the word by 1
+  // In else condition we are checking if the word is less than 50 then add to a array of words;
   useEffect(()=>{
-   socket.on("room-update",(message : string) =>{
-     console.log('room update received',message)
+   socket.on("room-update",(message:string) =>{
+    
+    const data = JSON.parse(message) as {
+      text : string,
+      value : number
+    }[]
+
+    data.map((newWord) =>{
+      const isWordAlreadyExist = words.some(
+        (word) => word.text === newWord.text
+      )
+
+      if(isWordAlreadyExist){
+
+        setWords((prev) =>{
+          const before = words.find(word => word.text === newWord.text)
+          const after = words.filter(word => word.text === newWord.text)
+
+          return [
+            ...after,
+            {text : before!.text , value : before!.value + newWord.value}
+          ]
+        })
+      } else if(words.length < 50){
+        
+        setWords((prev) => [...prev, newWord])
+      }
    })
-  },[])
+  })
+
+  return () =>{
+    socket.off("room-update")
+  }
+  },[words])
 
 
   const fontScale = scaleLog({
@@ -101,7 +136,7 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
             />
             <Button
               disabled={isPending}
-              onClick={() => { mutate({comment : input , topicName}); setInput('')}}
+              onClick={() => {mutate({comment : input , topicName}); setInput("")}}
             >
               Share
             </Button>

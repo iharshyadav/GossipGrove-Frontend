@@ -59,18 +59,18 @@ export const submitComment = async ({
     const words = wordFreq(comment);
 
     await Promise.all(
-        words.map( async (word) => (
+        words.map( async (word) => {
             await redis.zadd(
                 `room:${topicName}`,
                 {incr : true},
                 { member : word.text , score : word.value }
             )
-        ))
-    )
+           })
+          )
 
     await redis.incr("served-request")
 
-    await redis.publish(`room ${topicName}`,words)
+    await redis.publish(`room:${topicName}`,words)
 
     return comment;
 }
