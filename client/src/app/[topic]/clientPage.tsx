@@ -12,8 +12,8 @@ import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
-const socket = io("https://realtime-webapp-backend.vercel.app")
-
+const socket = io("https://realtime-webapp-backend.vercel.app/")
+// https://realtime-webapp-backend.vercel.app/
 interface clientPageProps {
   initialData: { text: string; value: number }[];
   topicName: string;
