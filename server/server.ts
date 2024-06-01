@@ -6,26 +6,17 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 
 const app = express()
-
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST"],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors())
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
-const server = http.createServer(app);
+const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
   },
-});
+})
 
 subRedis.on("message", (channel, message) => {
   io.to(channel).emit("room-update", message)
@@ -85,6 +76,10 @@ io.on("connection",async (socket) =>{
       }
     })
   })
+})
+
+app.get("/",(req,res) =>{
+  res.send("harsh");
 })
 
 const PORT = process.env.PORT || 8080

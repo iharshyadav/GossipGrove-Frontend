@@ -13,7 +13,7 @@ import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
 const socket = io("https://realtime-webapp-backend.vercel.app")
-// https://realtime-webapp-backend.vercel.app/
+
 interface clientPageProps {
   initialData: { text: string; value: number }[];
   topicName: string;
@@ -38,6 +38,7 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
   // we are setting the word while giving condition first finding the word and then filtering the whole array that does not contain that word
   // then returning the fitered array and incrementing the word by 1
   // In else condition we are checking if the word is less than 50 then add to a array of words;
+  
   useEffect(()=>{
    socket.on("room-update",(message:string) =>{
     
