@@ -1,24 +1,35 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const ioredis_1 = require("ioredis");
 require("dotenv/config");
 const app = (0, express_1.default)();
-const corsOptions = {
-    origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app", "https://realtime-webapp-backend.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-};
+app.use((0, cors_1.default)());
+app.get("/", (req, res) => {
+    res.send("harsh");
+});
 const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
-    cors: corsOptions,
+    cors: {
+        origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app"],
+    },
 });
 subRedis.on("message", (channel, message) => {
     io.to(channel).emit("room-update", message);
@@ -26,48 +37,48 @@ subRedis.on("message", (channel, message) => {
 subRedis.on("error", (err) => {
     console.error("Redis subscription error", err);
 });
-io.on("connection", async (socket) => {
+io.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = socket;
     // console.log(socket.id);
-    socket.on("join-room", async (room) => {
+    socket.on("join-room", (room) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("joined room : ", room);
-        const subscribedRooms = await redis.smembers("subscribed-rooms");
-        await socket.join(room);
-        await redis.sadd(`rooms:${id}`, room);
-        await redis.hincrby("room-connections", room, 1);
+        const subscribedRooms = yield redis.smembers("subscribed-rooms");
+        yield socket.join(room);
+        yield redis.sadd(`rooms:${id}`, room);
+        yield redis.hincrby("room-connections", room, 1);
         if (!subscribedRooms.includes(room)) {
-            subRedis.subscribe(room, async (err) => {
+            subRedis.subscribe(room, (err) => __awaiter(void 0, void 0, void 0, function* () {
                 if (err) {
                     console.error("Failed to subscribe:", err);
                 }
                 else {
-                    await redis.sadd("subscribed-rooms", room);
+                    yield redis.sadd("subscribed-rooms", room);
                     console.log("Subscribed to room:", room);
                 }
-            });
+            }));
         }
-    });
-    socket.on("disconnect", async () => {
+    }));
+    socket.on("disconnect", () => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = socket;
-        const joinedRooms = await redis.smembers(`rooms:${id}`);
-        await redis.del(`rooms:${id}`);
-        joinedRooms.forEach(async (room) => {
-            const remaningConnections = await redis.hincrby(`room-connections`, room, -1);
+        const joinedRooms = yield redis.smembers(`rooms:${id}`);
+        yield redis.del(`rooms:${id}`);
+        joinedRooms.forEach((room) => __awaiter(void 0, void 0, void 0, function* () {
+            const remaningConnections = yield redis.hincrby(`room-connections`, room, -1);
             if (remaningConnections <= 0) {
-                await redis.hdel(`room-connections`, room);
-                subRedis.unsubscribe(room, async (err) => {
+                yield redis.hdel(`room-connections`, room);
+                subRedis.unsubscribe(room, (err) => __awaiter(void 0, void 0, void 0, function* () {
                     if (err) {
                         console.error("Failed to unsubscribe", err);
                     }
                     else {
-                        await redis.srem("subscribed-rooms", room);
+                        yield redis.srem("subscribed-rooms", room);
                         console.log("Unsubscribed from room:", room);
                     }
-                });
+                }));
             }
-        });
-    });
-});
+        }));
+    }));
+}));
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
     console.log(`Server is listening on port: ${PORT}`);

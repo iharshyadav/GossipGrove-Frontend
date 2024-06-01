@@ -7,10 +7,13 @@
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "sourceMap": true,
-      "target": "es2017",
-      "outDir": "./public",
-      "baseUrl": "./lib",
-      "lib": ["es2017", "dom", "esnext"]
+      "target": "ES6",
+      "outDir": "public",
+      "baseUrl": ".",
+      "paths": {
+        "*": ["node_modules/*", "src/types/*"]
+      },
+      "lib": ["ES6", "dom", "esnext"]
     },
     "include": ["**/*.ts"],
     "exclude": ["node_modules"]
