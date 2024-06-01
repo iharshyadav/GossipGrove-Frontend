@@ -4,22 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const ioredis_1 = require("ioredis");
 require("dotenv/config");
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const corsOptions = {
+    origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app", "https://realtime-webapp-backend.vercel.app"],
+    methods: ["GET", "POST"],
+    credentials: true,
+};
 const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app", "https://realtime-webapp-backend.vercel.app"],
-        methods: ["GET", "POST"],
-        credentials: true,
-    },
+    cors: corsOptions,
 });
 subRedis.on("message", (channel, message) => {
     io.to(channel).emit("room-update", message);

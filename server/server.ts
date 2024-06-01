@@ -6,18 +6,18 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 
 const app = express()
-app.use(cors())
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app", "https://realtime-webapp-backend.vercel.app"],
+  methods: ["GET", "POST"],
+  credentials: true,
+};
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app","https://realtime-webapp-backend.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: corsOptions,
 })
 
 subRedis.on("message", (channel, message) => {
