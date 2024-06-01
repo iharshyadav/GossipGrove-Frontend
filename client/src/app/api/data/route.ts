@@ -11,6 +11,7 @@ export async function GET (req:Request) {
         })
     } catch (err) {
         console.error("Error fetching data:", err);
+        return NextResponse.error();
     }
 
 }
