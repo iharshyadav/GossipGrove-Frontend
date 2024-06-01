@@ -7,7 +7,7 @@ import "dotenv/config"
 
 const app = express()
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app/", "https://realtime-webapp-backend.vercel.app/"],
+  origin: "*",
   methods: ["GET", "POST"],
   credentials: true,
 };
