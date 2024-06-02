@@ -13,7 +13,7 @@ const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const server = http.createServer(app)
 const io = new Server(server,{
   cors: {
-    origin: "https://realtime-webapp.vercel.app",
+    origin: "*",
     allowedHeaders: ["my-custom-header"],
     credentials: true
   }
