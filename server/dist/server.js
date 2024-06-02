@@ -20,17 +20,10 @@ const ioredis_1 = require("ioredis");
 require("dotenv/config");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
-app.get("/", (req, res) => {
-    res.send("harsh");
-});
 const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app"],
-    },
-});
+const io = new socket_io_1.Server(server);
 subRedis.on("message", (channel, message) => {
     io.to(channel).emit("room-update", message);
 });
@@ -79,6 +72,9 @@ io.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }));
 }));
+app.use('/', (req, res) => {
+    res.json({ msg: "Server is live" });
+});
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
     console.log(`Server is listening on port: ${PORT}`);

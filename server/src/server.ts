@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
@@ -7,20 +7,11 @@ import "dotenv/config"
 
 const app = express()
 app.use(cors())
-
-app.get("/",(req,res) =>{
-  res.send("harsh");
-})
-
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
-  },
-})
+const io = new Server(server)
 
 subRedis.on("message", (channel, message) => {
   io.to(channel).emit("room-update", message)
@@ -82,7 +73,9 @@ io.on("connection",async (socket) =>{
   })
 })
 
-
+app.use('/',(req:Request,res:Response)=>{
+  res.json({msg:"Server is live"})
+})
 
 const PORT = process.env.PORT || 8080
 
