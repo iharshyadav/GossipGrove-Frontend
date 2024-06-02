@@ -74,3 +74,22 @@ export const submitComment = async ({
 
     return comment;
 }
+
+
+export const createTopicParams = async ({topicName , params} : {topicName : string ; params : string}) =>{
+
+    const regex = /^[a-zA-Z-]+$/
+
+
+    if(!topicName || topicName.length > 50){
+        throw ({error : "Name must be between 1 and 50 chars" })
+    };
+
+    if(!regex.test(topicName)){
+        return { error: "Only letters and hyphens allowed in name" }
+    }
+
+    await redis.sadd("existing-topics", (params));
+
+     redirect (`/privateSession/${params}`)
+}

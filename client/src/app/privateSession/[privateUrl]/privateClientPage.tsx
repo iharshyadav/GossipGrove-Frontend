@@ -9,8 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { submitComment } from "../action";
 import { io } from "socket.io-client"
+import { submitComment } from "@/app/action";
+import { useGlobalContext } from "@/app/Context/store";
+import { useParams } from "next/navigation";
 
 const socket = io("http://localhost:5000")
 
@@ -21,14 +23,20 @@ interface clientPageProps {
 
 const COLORS = ["#143059", "#2F6B9A", "#82a6c2"]
 
-const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
+const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
 
+  const { privateInput } = useGlobalContext();
+
+  const para = useParams()
+
+  // console.log(para.privateUrl)
+
 
   useEffect(()=>{
-    socket.emit("join-room",`room:${topicName}`);
+    socket.emit("join-room",`room:${para.privateUrl}`);
   },[])
 
 
@@ -92,7 +100,7 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
       <MaxWidthWrapper className="flex flex-col items-center gap-6 pt-20">
         <h1 className="text-4xl sm:text-5xl font-bold text-center tracking-tight text-balance">
           What people think about{" "}
-          <span className="text-blue-600">{topicName}</span>:
+          <span className="text-blue-600">{privateInput}</span>:
         </h1>
         <p className="text-sm">(updated in real-time)</p>
 
@@ -127,13 +135,13 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
  
       <div className="max-w-lg w-full">
           <Label className="font-semibold tracking-tight text-lg pb-2">
-            Here&apos;s what I think about {topicName}
+            Here&apos;s what I think about {privateInput}
           </Label>
           <div className="mt-1 flex gap-2 items-center">
             <Input
               value={input}
               onChange={({ target }) => setInput(target.value)}
-              placeholder={`${topicName} is absolutely...`}
+              placeholder={`${privateInput} is absolutely...`}
             />
             <Button
               disabled={isPending}
@@ -148,4 +156,4 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
   );
 };
 
-export default ClientPage;
+export default PrivateClientPage;

@@ -1,6 +1,6 @@
 import { redis } from '@/lib/redis';
 import { FC } from 'react'
-import ClientPage from './clientPage';
+import PrivateClientPage from './privateClientPage';
 
 interface pageProps {
   params : {
@@ -12,7 +12,7 @@ const page: FC<pageProps> = async ({ params }) => {
 
     const { topic } = params;
 
-    console.log(topic)
+    // console.log(topic)
 
     const initialData = await redis.zrange<(string | number)[]> (
         `room:${topic}`,0,49,{
@@ -32,7 +32,7 @@ const page: FC<pageProps> = async ({ params }) => {
 
     await redis.incr("served-request")
 
-    return <ClientPage initialData={words} topicName={topic} />
+    return <PrivateClientPage initialData={words} topicName={topic} />
 }
 
 export default page
