@@ -11,7 +11,13 @@ const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server,{
+  cors: {
+    origin: "https://realtime-webapp.vercel.app",
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+})
 
 subRedis.on("message", (channel, message) => {
   io.to(channel).emit("room-update", message)
