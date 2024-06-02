@@ -23,7 +23,7 @@ interface clientPageProps {
 
 const COLORS = ["#143059", "#2F6B9A", "#82a6c2"]
 
-const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
+const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
@@ -34,11 +34,13 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 
   // console.log(para.privateUrl)
 
-
+  
+  
   useEffect(()=>{
     socket.emit("join-room",`room:${para.privateUrl}`);
   },[])
-
+  
+  const harsh:string = Array.isArray(para.privateUrl) ? para.privateUrl[0] : para.privateUrl;
 
   // parsing the data from the message into JSON.
   // mapping the data in which we are checking if that word exist.
@@ -145,7 +147,7 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
             />
             <Button
               disabled={isPending}
-              onClick={() => {mutate({comment : input , topicName}); setInput("")}}
+              onClick={() => {mutate({comment : input , topicName : harsh}); setInput("")}}
             >
               Share
             </Button>

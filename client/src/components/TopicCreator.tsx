@@ -13,9 +13,6 @@ import { useGlobalContext } from "@/app/Context/store"
 const TopicCreator = () => {
   const [input, setInput] = useState<string>("");
   const { privateInput, setPrivateInput , params , setParams } = useGlobalContext();
-
-
-
   
   useEffect(() => {
     if (privateInput !== '') {
@@ -26,9 +23,9 @@ const TopicCreator = () => {
     }
   }, [privateInput]);
   
-useEffect(() =>{
-  setPrivateInput(privateInput)
-},[privateInput,setPrivateInput])
+// useEffect(() =>{
+//   setPrivateInput(privateInput)
+// },[privateInput,setPrivateInput])
   
   const {mutate , isPending , error} = useMutation({
     mutationFn : createTopic

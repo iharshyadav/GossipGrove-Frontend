@@ -1,6 +1,7 @@
 import { redis } from '@/lib/redis';
 import { FC } from 'react'
 import PrivateClientPage from './privateClientPage';
+import { useGlobalContext } from '@/app/Context/store';
 
 interface pageProps {
   params : {
@@ -8,11 +9,14 @@ interface pageProps {
   }
 }
 
-const page: FC<pageProps> = async ({ params }) => {
-
+const Page: FC<pageProps> = async ({ params }) => {
+  
     const { topic } = params;
 
+    // const { privateInput } = useGlobalContext();
+
     // console.log(topic)
+
 
     const initialData = await redis.zrange<(string | number)[]> (
         `room:${topic}`,0,49,{
@@ -35,4 +39,4 @@ const page: FC<pageProps> = async ({ params }) => {
     return <PrivateClientPage initialData={words} topicName={topic} />
 }
 
-export default page
+export default Page

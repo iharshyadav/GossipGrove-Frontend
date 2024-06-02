@@ -1,15 +1,16 @@
 import { FC } from 'react'
+import { useGlobalContext } from '../Context/store'
 
 interface pageProps {
    
   }
   
-  const page: FC<pageProps> = async () => {
-  
+  const Page: FC<pageProps> = async () => {
+
 
   return <div>
     harsh
   </div>
 }
 
-export default page
+export default Page
