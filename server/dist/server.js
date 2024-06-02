@@ -19,11 +19,26 @@ const socket_io_1 = require("socket.io");
 const ioredis_1 = require("ioredis");
 require("dotenv/config");
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const allowedOrigins = ['https://realtime-webapp.vercel.app'];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+};
+app.use((0, cors_1.default)(corsOptions));
 const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server);
+const io = new socket_io_1.Server(server, {
+    cors: corsOptions
+});
 subRedis.on("message", (channel, message) => {
     io.to(channel).emit("room-update", message);
 });
@@ -32,7 +47,6 @@ subRedis.on("error", (err) => {
 });
 io.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = socket;
-    // console.log(socket.id);
     socket.on("join-room", (room) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("joined room : ", room);
         const subscribedRooms = yield redis.smembers("subscribed-rooms");
@@ -56,9 +70,9 @@ io.on("connection", (socket) => __awaiter(void 0, void 0, void 0, function* () {
         const joinedRooms = yield redis.smembers(`rooms:${id}`);
         yield redis.del(`rooms:${id}`);
         joinedRooms.forEach((room) => __awaiter(void 0, void 0, void 0, function* () {
-            const remaningConnections = yield redis.hincrby(`room-connections`, room, -1);
-            if (remaningConnections <= 0) {
-                yield redis.hdel(`room-connections`, room);
+            const remainingConnections = yield redis.hincrby("room-connections", room, -1);
+            if (remainingConnections <= 0) {
+                yield redis.hdel("room-connections", room);
                 subRedis.unsubscribe(room, (err) => __awaiter(void 0, void 0, void 0, function* () {
                     if (err) {
                         console.error("Failed to unsubscribe", err);
