@@ -4,7 +4,6 @@ import http from "http"
 import { Server } from "socket.io"
 import { Redis } from "ioredis"
 import "dotenv/config"
-import otpRoute from "./routes/otp.route"
 
 const app = express()
 app.use(express.json());
