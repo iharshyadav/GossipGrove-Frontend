@@ -18,6 +18,12 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use('/otp',otpRouter);
 
+app.get("/",(req:Request,res:Response) =>{
+  res.json({
+    message : "hii harsh"
+  })
+})
+
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
@@ -90,11 +96,6 @@ io.on("connection",async (socket) =>{
   })
 })
 
-app.get("/",(req:Request,res:Response) =>{
-  res.json({
-    message : "hii harsh"
-  })
-})
 
 
 const PORT = process.env.PORT || 8080
