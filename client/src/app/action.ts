@@ -95,3 +95,6 @@ export const createTopicParams = async ({topicName , params} : {topicName : stri
 
      redirect (`/privateSession/${params}`)
 }
+
+
+

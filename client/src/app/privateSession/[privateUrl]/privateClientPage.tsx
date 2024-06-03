@@ -13,6 +13,7 @@ import { io } from "socket.io-client"
 import { submitComment } from "@/app/action";
 import { useGlobalContext } from "@/app/Context/store";
 import { useParams } from "next/navigation";
+import Otp from "@/components/otp";
 
 const socket = io("http://localhost:5000")
 
@@ -134,7 +135,6 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
           }
         </Wordcloud>
       </div>
- 
       <div className="max-w-lg w-full">
           <Label className="font-semibold tracking-tight text-lg pb-2">
             Here&apos;s what I think about {privateInput}
@@ -152,6 +152,9 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
               Share
             </Button>
           </div>
+          <div className="absolute bottom-20 right-36">
+           <Otp />
+           </div>
         </div>
       </MaxWidthWrapper>
     </div>

@@ -1,7 +1,6 @@
 import { redis } from '@/lib/redis';
 import { FC } from 'react'
 import PrivateClientPage from './privateClientPage';
-import { useGlobalContext } from '@/app/Context/store';
 
 interface pageProps {
   params : {
@@ -23,6 +22,8 @@ const Page: FC<pageProps> = async ({ params }) => {
             withScores : true
         })
 
+       
+
     const words : {text : string; value : number}[] = [];    
 
     for(let i=0;i<initialData.length;i++){
@@ -33,6 +34,8 @@ const Page: FC<pageProps> = async ({ params }) => {
             words.push({ text, value })
           }
     }
+
+   
 
     await redis.incr("served-request")
 
