@@ -1,40 +1,25 @@
-import express, { Request, Response } from "express"
+import express,{Request,Response} from "express"
 import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
 import { Redis } from "ioredis"
 import "dotenv/config"
-import otpRouter from "./routes/otp.route"
-import { dbConfig } from "./database/db"
-
-const corsOptions = {
-  origin: ["http://localhost:3000","https://realtime-webapp.vercel.app","https://realtime-webapp-git-main-iharshyadavs-projects.vercel.app"],
-  methods: ["GET", "POST"],
-  credentials: true,
-}
 
 const app = express()
-app.use(express.json());
-app.use(cors(corsOptions));
-app.use('/otp',otpRouter);
 
-app.get("/",(req:Request,res:Response) =>{
-  res.json({
-    message : "hii harsh"
-  })
-})
+const corsOptions = {
+  origin: process.env.CLIENT,
+  methods: ["GET", "POST"],
+  credentials: true,
+};
+
+app.use(cors());
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
-const server = http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app" , "https://realtime-webapp-git-main-iharshyadavs-projects.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-})
+const server = http.createServer(app);
+const io = new Server(server);
 
 subRedis.on("message", (channel, message) => {
   io.to(channel).emit("room-update", message)
@@ -96,11 +81,18 @@ io.on("connection",async (socket) =>{
   })
 })
 
-
-
 const PORT = process.env.PORT || 8080
-
-server.listen(PORT, async () => {
-  await dbConfig();
+// app.use((req:Request,res:Response, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "https://realtime-webapp-zxif.vercel.app/");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
+app.use('/',(req:Request,res:Response)=>{
+  res.json({msg:"Server is live"})
+})
+server.listen(PORT, () => {
   console.log(`Server is listening on port: ${PORT}`)
 })
