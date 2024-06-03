@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
@@ -7,13 +7,15 @@ import "dotenv/config"
 import otpRouter from "./routes/otp.route"
 import { dbConfig } from "./database/db"
 
-const app = express()
-app.use(express.json());
-app.use(cors({
+const corsOptions = {
   origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
   methods: ["GET", "POST"],
   credentials: true,
-}));
+}
+
+const app = express()
+app.use(express.json());
+app.use(cors(corsOptions));
 app.use('/otp',otpRouter);
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
@@ -22,7 +24,7 @@ const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
+    origin: ["http://localhost:3000","https://realtime-webapp.vercel.app" , "https://realtime-webapp-git-main-iharshyadavs-projects.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -88,7 +90,7 @@ io.on("connection",async (socket) =>{
   })
 })
 
-app.get("/",(req,res) =>{
+app.get("/",(req:Request,res:Response) =>{
   res.json({
     message : "hii harsh"
   })
