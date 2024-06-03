@@ -89,7 +89,7 @@ io.on("connection",async (socket) =>{
 })
 
 app.get("/",(req,res) =>{
-  res.send({
+  res.json({
     message : "hii harsh"
   })
 })
