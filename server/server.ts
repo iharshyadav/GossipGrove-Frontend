@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-import http from "http"
+import https from "https"
 import { Server } from "socket.io"
 import { Redis } from "ioredis"
 import "dotenv/config"
@@ -12,7 +12,7 @@ app.use(cors())
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
-const server = http.createServer(app)
+const server = https.createServer(app)
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:3000"],
