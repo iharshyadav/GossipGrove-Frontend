@@ -8,7 +8,7 @@ import otpRouter from "./routes/otp.route"
 import { dbConfig } from "./database/db"
 
 const corsOptions = {
-  origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
+  origin: ["http://localhost:3000","https://realtime-webapp.vercel.app","https://realtime-webapp-git-main-iharshyadavs-projects.vercel.app"],
   methods: ["GET", "POST"],
   credentials: true,
 }
