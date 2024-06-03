@@ -15,7 +15,7 @@ import { useGlobalContext } from "@/app/Context/store";
 import { useParams } from "next/navigation";
 import Otp from "@/components/otp";
 
-const socket = io("http://localhost:5000")
+const socket = io("https://realtime-webapp-backend.vercel.app")
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
