@@ -1,18 +1,21 @@
 import express from "express"
 import cors from "cors"
-import https from "https"
+import http from "http"
 import { Server } from "socket.io"
 import { Redis } from "ioredis"
 import "dotenv/config"
+import otpRouter from "./routes/otp.route"
+import { dbConfig } from "./database/db"
 
 const app = express()
 app.use(express.json());
 app.use(cors())
+app.use('/otp',otpRouter);
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
-const server = https.createServer(app)
+const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:3000","https://realtime-webapp.vercel.app"],
@@ -81,8 +84,16 @@ io.on("connection",async (socket) =>{
   })
 })
 
+app.get("/",(req,res) =>{
+  res.send({
+    message : "hii harsh"
+  })
+})
+
+
 const PORT = process.env.PORT || 8080
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
+  await dbConfig();
   console.log(`Server is listening on port: ${PORT}`)
 })

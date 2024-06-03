@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { otpVerify } from "../controller/otpVerify";
+import { otpSend } from "../controller/otpVerify";
 
 const route = Router()
 
-route.post("/otpVerify",otpVerify)
+route.post("/otpVerify",otpSend)
+
+export default route;

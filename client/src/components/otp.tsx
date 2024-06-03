@@ -15,17 +15,17 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { useGlobalContext } from '@/app/Context/store'
-import randomString from "randomstring"
 import axios from 'axios'
   
 
 interface otpProps {
-
-
-  
+ 
+  input :  string ;
 }
 
-const Otp: FC<otpProps> = ({}) => {
+const Otp: FC<otpProps> = ({
+  input
+}) => {
 
   const  {email , setEmail , secretCode , setSecretCode} = useGlobalContext();
 
@@ -35,10 +35,13 @@ const Otp: FC<otpProps> = ({}) => {
     setSecretCode(url);
   },[]);
 
-  const sendOtp = async () =>{
-    axios.post(`${process.env.BASE_URL}/otpVerify`,{
+  const sendOtp = async (e : React.FormEvent) =>{
+    console.log("first")
+    e.preventDefault();
+   await axios.post(`http://localhost:5000/otp/otpVerify`,{
       email,
-      secretCode
+      secretCode,
+      input
     })
     .then((data) =>{
       console.log(data)
@@ -48,41 +51,62 @@ const Otp: FC<otpProps> = ({}) => {
     })
   }
 
-  return <div>
-     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className='bg-black text-white '>Share Code</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            {/* Make changes to your profile here. Click save when you're done. */}
-            Enter the email to send the Secret code...
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Email
-            </Label>
-            <Input id="name" onChange={ ({target}) => setEmail(target.value)} value={email} type='email' className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            {/* <Label htmlFor="username" className="text-right">
-              
-            </Label> */}
-            <Input id="username" value={secretCode} type='text' className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit" onSubmit={sendOtp}>Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-
-
-  </div>
+  return (
+    <div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="bg-black text-white ">
+            Share Code
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={sendOtp}>
+            <DialogHeader>
+              <DialogTitle>Edit profile</DialogTitle>
+              <DialogDescription>
+                Enter the email to send the Secret code...
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  onChange={({ target }) => setEmail(target.value)}
+                  value={email}
+                  type="email"
+                  className="col-span-3"
+                />
+                <Input
+                  id="input"
+                  value={input}
+                  type="text"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="otp" className="text-right">
+                  Otp
+                </Label>
+                <Input
+                  id="otp"
+                  value={secretCode}
+                  type="number"
+                  className="col-span-3"
+                  readOnly
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
 
 export default Otp

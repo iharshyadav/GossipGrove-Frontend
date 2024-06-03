@@ -35,8 +35,6 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
 
   // console.log(para.privateUrl)
 
-  
-  
   useEffect(()=>{
     socket.emit("join-room",`room:${para.privateUrl}`);
   },[])
@@ -153,7 +151,7 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
             </Button>
           </div>
           <div className="absolute bottom-20 right-36">
-           <Otp />
+           <Otp input = {input} />
            </div>
         </div>
       </MaxWidthWrapper>
