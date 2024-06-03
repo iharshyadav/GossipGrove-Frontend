@@ -1,7 +1,6 @@
-import { Request, Response } from "express";
 import { Otp } from "../models/otp.models";
 
-export const otpSend = async (req:Request,res:Response) =>{
+export const otpSend = async (req,res) =>{
 
   console.log(req.body);
   const { email , secretCode , paraurl } = req.body;

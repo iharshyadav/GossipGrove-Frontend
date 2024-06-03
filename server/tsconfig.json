@@ -1,16 +1,17 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "pretty": true,
-      "resolveJsonModule": true,
+  "compilerOptions": {
+      "module": "CommonJS",
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
+      "target": "es6",
+      "noImplicitAny": true,
+      "moduleResolution": "node",
       "sourceMap": true,
-      "target": "es2017",
-      "outDir": "./public",
-      "lib": ["es2017", "dom", "esnext"]
-    },
-    "include": ["**/*.ts"],
-    "exclude": ["node_modules"]
+      "outDir": "dist",
+      "baseUrl": ".",
+      "paths": {
+          "*": ["node_modules/*", "src/types/*"]
+      }
+  },
+  "include": ["./src/**/*"]
   }

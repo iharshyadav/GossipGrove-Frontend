@@ -1,0 +1,86 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
+const ioredis_1 = require("ioredis");
+require("dotenv/config");
+const app = (0, express_1.default)();
+const corsOptions = {
+    origin: process.env.CLIENT,
+    methods: ["GET", "POST"],
+    credentials: true,
+};
+app.use((0, cors_1.default)());
+const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
+const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
+const server = http_1.default.createServer(app);
+const io = new socket_io_1.Server(server);
+subRedis.on("message", (channel, message) => {
+    io.to(channel).emit("room-update", message);
+});
+subRedis.on("error", (err) => {
+    console.error("Redis subscription error", err);
+});
+io.on("connection", async (socket) => {
+    const { id } = socket;
+    // console.log(socket.id);
+    socket.on("join-room", async (room) => {
+        console.log("joined room : ", room);
+        const subscribedRooms = await redis.smembers("subscribed-rooms");
+        await socket.join(room);
+        await redis.sadd(`rooms:${id}`, room);
+        await redis.hincrby("room-connections", room, 1);
+        if (!subscribedRooms.includes(room)) {
+            subRedis.subscribe(room, async (err) => {
+                if (err) {
+                    console.error("Failed to subscribe:", err);
+                }
+                else {
+                    await redis.sadd("subscribed-rooms", room);
+                    console.log("Subscribed to room:", room);
+                }
+            });
+        }
+    });
+    socket.on("disconnect", async () => {
+        const { id } = socket;
+        const joinedRooms = await redis.smembers(`rooms:${id}`);
+        await redis.del(`rooms:${id}`);
+        joinedRooms.forEach(async (room) => {
+            const remaningConnections = await redis.hincrby(`room-connections`, room, -1);
+            if (remaningConnections <= 0) {
+                await redis.hdel(`room-connections`, room);
+                subRedis.unsubscribe(room, async (err) => {
+                    if (err) {
+                        console.error("Failed to unsubscribe", err);
+                    }
+                    else {
+                        await redis.srem("subscribed-rooms", room);
+                        console.log("Unsubscribed from room:", room);
+                    }
+                });
+            }
+        });
+    });
+});
+const PORT = process.env.PORT || 8080;
+// app.use((req:Request,res:Response, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "https://realtime-webapp-zxif.vercel.app/");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
+app.use('/', (req, res) => {
+    res.json({ msg: "Server is live" });
+});
+server.listen(PORT, () => {
+    console.log(`Server is listening on port: ${PORT}`);
+});
+//# sourceMappingURL=server.js.map
