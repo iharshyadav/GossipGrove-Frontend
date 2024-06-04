@@ -1,4 +1,4 @@
-import express from "express"
+import express, { json } from "express"
 import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
@@ -6,10 +6,25 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 
 const app = express()
+app.use(json())
 app.use(cors({
   origin : "*",
 }
 ))
+
+app.use((req, res, next) => {
+  res.header(
+  Access-Control-Allow-Origin,
+  clientURL
+  );
+  res.header(Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS);
+  res.header(Access-Control-Allow-Headers, Content-Type, Authorization);
+  res.header(Access-Control-Allow-Credentials, true);
+  
+  console.log("Request received:", req.method, req.url);
+  
+  next();
+  });
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
