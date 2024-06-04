@@ -28,14 +28,17 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 
   useEffect(() => {
     const socket = new WebSocket('wss://realtime-webapp-6mww.vercel.app');
-
-
+  
+    socket.addEventListener('open', () => {
+      // The connection is established, you can start sending data
+    });
+  
     return () => {
-        if (socket.readyState === 1) { // <-- This is important
-            socket.close();
-        }
-    }
-}, []);
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+    };
+  }, []);
 
 
   useEffect(()=>{
