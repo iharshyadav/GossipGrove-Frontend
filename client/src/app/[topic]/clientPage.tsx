@@ -26,6 +26,17 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
 
+  useEffect(() => {
+    const socket = new WebSocket('wss://realtime-webapp-6mww.vercel.app');
+
+
+    return () => {
+        if (socket.readyState === 1) { // <-- This is important
+            socket.close();
+        }
+    }
+}, []);
+
 
   useEffect(()=>{
     socket.emit("join-room",`room:${topicName}`);
