@@ -12,7 +12,12 @@ import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
-const socket = io("https://realtime-webapp-6mww.vercel.app")
+const socket = io("https://realtime-webapp-6mww.vercel.app",{
+  withCredentials: true,
+  extraHeaders: {
+    "my-custom-header": "abcd"
+  }
+})
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
