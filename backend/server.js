@@ -1,4 +1,4 @@
-import express, { json } from "express"
+import express from "express"
 import cors from "cors"
 import http from "http"
 import { Server } from "socket.io"
@@ -6,11 +6,7 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 
 const app = express()
-app.use(json())
-app.use(cors({
-  origin : "*",
-}
-))
+app.use(cors())
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
@@ -18,10 +14,10 @@ const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: ["https://realtime-webapp.vercel.app" , "http://localhost:3000"],
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true,
-    allowedHeaders: ["my-custom-header"],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
   },
 })
 
