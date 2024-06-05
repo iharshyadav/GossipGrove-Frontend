@@ -81,8 +81,14 @@ io.on("connection",async (socket) =>{
 })
 
 const PORT = process.env.PORT || 8080
-
-
+// app.use((req:Request,res:Response, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "https://realtime-webapp-zxif.vercel.app/");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 app.use('/',(req,res)=>{
   res.json({msg:"Server is live"})
 })

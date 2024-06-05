@@ -1,10 +1,12 @@
+import { Request, Response } from "express";
 import { Otp } from "../models/otp.models";
+import { myfunction } from "../helper/email";
 
-export const otpSend = async (req,res) =>{
+export const otpSend = async (req:Request,res:Response) =>{
 
-  console.log(req.body);
-  const { email , secretCode , paraurl } = req.body;
-  console.log(paraurl)
+  // console.log(req.body);
+  const { email , secretCode  } = req.body;
+  // console.log(paraurl)
 
   if(!email || !secretCode) {
     throw new Error("please fill all the details");
@@ -24,6 +26,7 @@ export const otpSend = async (req,res) =>{
   if(!otp){
     throw new Error("Not saved to database");
   }
+
 
   console.log(otp);
 

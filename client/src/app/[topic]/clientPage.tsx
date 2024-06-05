@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
-const socket = io("https://realtime-webapp-6mww.vercel.app")
+const socket = io("http://localhost:5000")
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
@@ -25,20 +25,6 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
-
-  useEffect(() => {
-    const socket = new WebSocket('wss://realtime-webapp-6mww.vercel.app');
-  
-    socket.addEventListener('open', () => {
-      // The connection is established, you can start sending data
-    });
-  
-    return () => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
-    };
-  }, []);
 
 
   useEffect(()=>{

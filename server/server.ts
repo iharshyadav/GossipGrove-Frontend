@@ -4,11 +4,15 @@ import http from "http"
 import { Server } from "socket.io"
 import { Redis } from "ioredis"
 import "dotenv/config"
+import { dbConfig } from "./database/db"
+import otpRoute from "./routes/otp.route"
 
 const app = express()
+app.use(express.json())
+app.use('/otp',otpRoute)
 
 const corsOptions = {
-  origin: process.env.CLIENT,
+  origin:"*",
   methods: ["GET", "POST"],
   credentials: true,
 };
@@ -19,7 +23,9 @@ const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server,{
+  cors: corsOptions
+});
 
 subRedis.on("message", (channel, message) => {
   io.to(channel).emit("room-update", message)
@@ -82,17 +88,11 @@ io.on("connection",async (socket) =>{
 })
 
 const PORT = process.env.PORT || 8080
-// app.use((req:Request,res:Response, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://realtime-webapp-zxif.vercel.app/");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-app.use('/',(req:Request,res:Response)=>{
-  res.json({msg:"Server is live"})
-})
-server.listen(PORT, () => {
+
+// app.use('/',(req:Request,res:Response)=>{
+//   res.json({msg:"Server is live"})
+// })
+server.listen(PORT, async () => {
+  await dbConfig();
   console.log(`Server is listening on port: ${PORT}`)
 })

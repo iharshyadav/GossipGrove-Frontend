@@ -10,9 +10,9 @@ const otpSchema = new mongoose.Schema ({
         type : String,
         required : true,
     },
-    paraurl : {
-        type : String
-    }
+    // paraurl : {
+    //     type : String
+    // }
 })
 
 export const Otp = mongoose.models.Otp || mongoose.model("Otp",otpSchema);

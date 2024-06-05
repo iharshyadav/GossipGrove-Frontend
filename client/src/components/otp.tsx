@@ -79,12 +79,12 @@ const Otp: FC<otpProps> = ({
                   type="email"
                   className="col-span-3"
                 />
-                <Input
-                  id="input"
-                  value={input}
+                {/* <Input
+                  id="paraurl"
+                  value={input || "hgfhffhjgcfffjjyjyytryd"}
                   type="text"
                   className="col-span-3"
-                />
+                /> */}
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="otp" className="text-right">
