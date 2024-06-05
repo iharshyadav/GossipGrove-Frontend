@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { otpSend } from "../controller/otpVerify";
-import { myfunction } from "../helper/email";
 
 const route = Router()
 
-route.post("/otpVerify",myfunction,otpSend)
+route.post("/otpVerify",otpSend)
 
 export default route;
