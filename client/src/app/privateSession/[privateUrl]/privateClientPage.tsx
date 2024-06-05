@@ -14,6 +14,7 @@ import { submitComment } from "@/app/action";
 import { useGlobalContext } from "@/app/Context/store";
 import { useParams } from "next/navigation";
 import Otp from "@/components/otp";
+import axios from "axios";
 
 const socket = io("http://localhost:5000")
 
@@ -96,6 +97,23 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
   const { mutate , isPending } = useMutation({
     mutationFn : submitComment
   })
+
+  useEffect(() =>{
+   const getItem = async () =>{
+     await axios.get(`http://localhost:5000/otp/getRoom`,{
+      params: {
+        privateRoomName: privateInput
+      }
+     })
+     .then((data) =>{
+      const res = data.data.room.privateRoomName;
+      console.log(res);
+     }).catch((e) =>[
+      console.log(e)
+     ])
+   }
+   getItem();
+  },[])
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-grid-zinc-50 pb-20">
       <MaxWidthWrapper className="flex flex-col items-center gap-6 pt-20">

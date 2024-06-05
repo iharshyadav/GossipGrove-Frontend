@@ -27,8 +27,9 @@ const Otp: FC<otpProps> = ({
   input
 }) => {
 
-  const  {email , setEmail , secretCode , setSecretCode} = useGlobalContext();
+  const  {email , setEmail , secretCode , setSecretCode , privateInput} = useGlobalContext();
 
+  console.log(privateInput || "hrsh");
 
   useEffect(() => {
     const url = Math.floor(Math.random() * 1000000);

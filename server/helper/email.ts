@@ -5,17 +5,6 @@ import { NextFunction, Request, Response } from "express"
 
 export const myfunction = async (req:Request,email:string,secretCode : string ,res:Response) => {
     try {
-
-        // const data = [
-        //   {
-        //     "Name": "Harsh",
-        //     "Email": "hy945196@gmail.com"
-        //   },
-        // ]
-
-        // console.log(req.body);
-        // const { e } = req.body;
-        // console.log(sameEmail)
  
         let transporter = nodemailer.createTransport({
             service: 'gmail',

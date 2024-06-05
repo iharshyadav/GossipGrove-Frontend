@@ -67,21 +67,29 @@ const TopicCreator = () => {
         Create Private Session...
       </h1>
       <div className="flex gap-2">
-        <Input
-          value={privateInput}
-          onChange={({ target }) => setPrivateInput(target.value)}
-          className="bg-white min-w-64"
-          placeholder="Enter topic here..."
-        />
-        <Button
-          disabled={isPending2}
-          onClick={() => mutate2({ topicName: privateInput, params: params })}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            mutate2({ topicName: privateInput, params: params });
+          }}
         >
-          Create Room{" "}
-          <span className="ml-1">
-            <LockKeyhole size={17} />
-          </span>
-        </Button>
+          <Input
+            value={privateInput}
+            onChange={({ target }) => setPrivateInput(target.value)}
+            className="bg-white min-w-64"
+            placeholder="Enter topic here..."
+          />
+          <Button
+            disabled={isPending2}
+            type="submit"
+            // onClick={() => mutate2({ topicName: privateInput, params: params })}
+          >
+            Create Room{" "}
+            <span className="ml-1">
+              <LockKeyhole size={17} />
+            </span>
+          </Button>
+        </form>
       </div>
       {error2 ? <p className="text-sm text-red-600">{error2.message}</p> : null}
     </>

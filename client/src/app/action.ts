@@ -1,6 +1,7 @@
 "use server"
 
 import { redis } from "@/lib/redis"
+import axios from "axios"
 import { redirect } from "next/navigation"
 
 export const createTopic = async ({topicName} : {topicName : string}) =>{
@@ -92,6 +93,19 @@ export const createTopicParams = async ({topicName , params} : {topicName : stri
     }
 
     await redis.sadd("existing-topics", topicName);
+
+    (async () => {
+        console.log(topicName)
+        await axios.post(`${process.env.BASE_URL}/otp/roomSave`,{
+          privateRoomName : topicName
+        })
+        .then((data) =>{
+        //   console.log(data)
+        })
+        .catch((e) =>{
+          console.log(e)
+        })
+    })();
 
      redirect (`/privateSession/${params}`)
 }
