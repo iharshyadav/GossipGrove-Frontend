@@ -1,31 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { useMutation } from "@tanstack/react-query"
 import { createTopic, createTopicParams } from "@/app/action"
 import { KeyRound, LockKeyhole } from "lucide-react"
-import randomString from "randomstring"
 import { useGlobalContext } from "@/app/Context/store"
 
 
 const TopicCreator = () => {
   const [input, setInput] = useState<string>("");
-  const { privateInput, setPrivateInput , params , setParams } = useGlobalContext();
-  
-  useEffect(() => {
-    if (privateInput !== '') {
-      setParams(randomString.generate({
-        length: 80,
-        charset: 'alphabetic'
-      }));
-    }
-  }, [privateInput]);
-  
-// useEffect(() =>{
-//   setPrivateInput(privateInput)
-// },[privateInput,setPrivateInput])
+  const { privateInput, setPrivateInput } = useGlobalContext();
+
   
   const {mutate , isPending , error} = useMutation({
     mutationFn : createTopic
@@ -67,12 +54,6 @@ const TopicCreator = () => {
         Create Private Session...
       </h1>
       <div className="flex gap-2">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            mutate2({ topicName: privateInput, params: params });
-          }}
-        >
           <Input
             value={privateInput}
             onChange={({ target }) => setPrivateInput(target.value)}
@@ -82,14 +63,13 @@ const TopicCreator = () => {
           <Button
             disabled={isPending2}
             type="submit"
-            // onClick={() => mutate2({ topicName: privateInput, params: params })}
+            onClick={() => mutate2({ topicName: privateInput})}
           >
             Create Room{" "}
             <span className="ml-1">
               <LockKeyhole size={17} />
             </span>
           </Button>
-        </form>
       </div>
       {error2 ? <p className="text-sm text-red-600">{error2.message}</p> : null}
     </>

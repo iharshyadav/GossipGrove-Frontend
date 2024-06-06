@@ -149,3 +149,9 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
 };
 
 export default ClientPage;
+
+
+
+{/* <div className="absolute bottom-20 right-36">
+           <Otp input = {input} />
+           </div> */}

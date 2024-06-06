@@ -1,3 +1,5 @@
+"use client"
+
 import { redis } from '@/lib/redis';
 import { FC } from 'react'
 import ClientPage from './clientPage';

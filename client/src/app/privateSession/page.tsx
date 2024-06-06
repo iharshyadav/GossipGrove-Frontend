@@ -1,16 +1,17 @@
-import { FC } from 'react'
-import { useGlobalContext } from '../Context/store'
-
 interface pageProps {
-   
+  params : {
+    topic : string;
   }
+}
   
-  const Page: FC<pageProps> = async () => {
+  const page = async ({params} : pageProps) => {
 
+const { topic } = params;
 
+// console.log(topic)
   return <div>
-    harsh
+    harsh${topic}
   </div>
 }
 
-export default Page
+export default page

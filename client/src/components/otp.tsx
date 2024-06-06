@@ -27,9 +27,9 @@ const Otp: FC<otpProps> = ({
   input
 }) => {
 
-  const  {email , setEmail , secretCode , setSecretCode , privateInput} = useGlobalContext();
+  const  {email , setEmail , secretCode , setSecretCode} = useGlobalContext();
 
-  console.log(privateInput || "hrsh");
+  // console.log(privateInput || "hrsh");
 
   useEffect(() => {
     const url = Math.floor(Math.random() * 1000000);
@@ -42,7 +42,7 @@ const Otp: FC<otpProps> = ({
    await axios.post(`http://localhost:5000/otp/otpVerify`,{
       email,
       secretCode,
-      input
+      // input
     })
     .then((data) =>{
       console.log(data)
@@ -101,7 +101,7 @@ const Otp: FC<otpProps> = ({
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Send Code</Button>
             </DialogFooter>
           </form>
         </DialogContent>

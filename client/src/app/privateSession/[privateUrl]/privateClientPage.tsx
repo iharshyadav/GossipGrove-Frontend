@@ -11,36 +11,35 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { io } from "socket.io-client"
 import { submitComment } from "@/app/action";
-import { useGlobalContext } from "@/app/Context/store";
 import { useParams } from "next/navigation";
 import Otp from "@/components/otp";
-import axios from "axios";
 
 const socket = io("http://localhost:5000")
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
-  topicName: string;
+  // topicName: string;
 }
 
 const COLORS = ["#143059", "#2F6B9A", "#82a6c2"]
 
-const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => {
+const PrivateClientPage: FC<clientPageProps> = ({ initialData  }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
-
-  const { privateInput } = useGlobalContext();
 
   const para = useParams()
 
   // console.log(para.privateUrl)
 
+  // const topicName:string= para.privateUrl;
+
+  const topicName:string = Array.isArray(para.privateUrl) ? para.privateUrl[0] : para.privateUrl;
+
   useEffect(()=>{
-    socket.emit("join-room",`room:${para.privateUrl}`);
+    socket.emit("join-room",`room:${topicName}`);
   },[])
   
-  const harsh:string = Array.isArray(para.privateUrl) ? para.privateUrl[0] : para.privateUrl;
 
   // parsing the data from the message into JSON.
   // mapping the data in which we are checking if that word exist.
@@ -97,29 +96,12 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
   const { mutate , isPending } = useMutation({
     mutationFn : submitComment
   })
-
-  useEffect(() =>{
-   const getItem = async () =>{
-     await axios.get(`http://localhost:5000/otp/getRoom`,{
-      params: {
-        privateRoomName: privateInput
-      }
-     })
-     .then((data) =>{
-      const res = data.data.room.privateRoomName;
-      console.log(res);
-     }).catch((e) =>[
-      console.log(e)
-     ])
-   }
-   getItem();
-  },[])
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-grid-zinc-50 pb-20">
       <MaxWidthWrapper className="flex flex-col items-center gap-6 pt-20">
         <h1 className="text-4xl sm:text-5xl font-bold text-center tracking-tight text-balance">
           What people think about{" "}
-          <span className="text-blue-600">{privateInput}</span>:
+          <span className="text-blue-600">{topicName}</span>:
         </h1>
         <p className="text-sm">(updated in real-time)</p>
 
@@ -153,17 +135,17 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData, topicName  }) => 
       </div>
       <div className="max-w-lg w-full">
           <Label className="font-semibold tracking-tight text-lg pb-2">
-            Here&apos;s what I think about {privateInput}
+            Here&apos;s what I think about {topicName}
           </Label>
           <div className="mt-1 flex gap-2 items-center">
             <Input
               value={input}
               onChange={({ target }) => setInput(target.value)}
-              placeholder={`${privateInput} is absolutely...`}
+              placeholder={`${topicName} is absolutely...`}
             />
             <Button
               disabled={isPending}
-              onClick={() => {mutate({comment : input , topicName : harsh}); setInput("")}}
+              onClick={() => {mutate({comment : input , topicName}); setInput("")}}
             >
               Share
             </Button>

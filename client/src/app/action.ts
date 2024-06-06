@@ -1,7 +1,6 @@
 "use server"
 
 import { redis } from "@/lib/redis"
-import axios from "axios"
 import { redirect } from "next/navigation"
 
 export const createTopic = async ({topicName} : {topicName : string}) =>{
@@ -9,7 +8,7 @@ export const createTopic = async ({topicName} : {topicName : string}) =>{
 
     const regex = /^[a-zA-Z-]+$/
 
-    console.log(topicName)
+    // console.log(topicName)
 
     if(!topicName || topicName.length > 50){
         throw ({error : "Name must be between 1 and 50 chars" })
@@ -79,10 +78,9 @@ export const submitComment = async ({
 }
 
 
-export const createTopicParams = async ({topicName , params} : {topicName : string ; params : string}) =>{
+export const createTopicParams = async ({topicName} : {topicName : string}) =>{
 
     const regex = /^[a-zA-Z-]+$/
-
 
     if(!topicName || topicName.length > 50){
         throw ({error : "Name must be between 1 and 50 chars" })
@@ -94,18 +92,5 @@ export const createTopicParams = async ({topicName , params} : {topicName : stri
 
     await redis.sadd("existing-topics", topicName);
 
-    (async () => {
-        console.log(topicName)
-        await axios.post(`${process.env.BASE_URL}/otp/roomSave`,{
-          privateRoomName : topicName
-        })
-        .then((data) =>{
-        //   console.log(data)
-        })
-        .catch((e) =>{
-          console.log(e)
-        })
-    })();
-
-     redirect (`/privateSession/${params}`)
+     redirect (`/privateSession/${topicName}`)
 }
