@@ -9,22 +9,19 @@ import otpRoute from "./routes/otp.route"
 
 const app = express()
 app.use(express.json())
-app.use('/otp',otpRoute)
-
-const corsOptions = {
-  origin:"*",
-  methods: ["GET", "POST"],
-  credentials: true,
-};
-
 app.use(cors());
+app.use('/otp',otpRoute)
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 
 const server = http.createServer(app);
 const io = new Server(server,{
-  cors: corsOptions
+  cors: {
+    origin:"*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  }
 });
 
 subRedis.on("message", (channel, message) => {

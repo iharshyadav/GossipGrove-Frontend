@@ -4,7 +4,7 @@ import { getPrivateRoom, otpSend, postPrivateRoom } from "../controller/otpVerif
 const route = Router()
 
 route.post("/otpVerify",otpSend)
-route.post("/roomSave",postPrivateRoom)
-route.get("/getRoom",getPrivateRoom)
+// route.post("/roomSave",postPrivateRoom)
+route.post("/getRoom",getPrivateRoom)
 
 export default route;

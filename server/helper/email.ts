@@ -87,7 +87,7 @@ export const myfunction = async (req:Request,email:string,secretCode : string ,r
                 </body>
                 </html>`,
             }
-            await transporter
+            await transporter 
                 .sendMail(mailOptions)
                 .then(() => {
                     console.log(`Mail sent to ${email}`)
