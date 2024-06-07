@@ -21,10 +21,12 @@ import axios from 'axios'
 interface otpProps {
  
   input :  string ;
+  room : string | string[];
 }
 
 const Otp: FC<otpProps> = ({
-  input
+  input,
+  room
 }) => {
 
   const  {email , setEmail , secretCode , setSecretCode} = useGlobalContext();
@@ -32,17 +34,18 @@ const Otp: FC<otpProps> = ({
   // console.log(privateInput || "hrsh");
 
   useEffect(() => {
-    const url = Math.floor(Math.random() * 1000000);
+    const url = Math.floor(100000 + Math.random() * 900000)
     setSecretCode(url);
   },[]);
 
   const sendOtp = async (e : React.FormEvent) =>{
     console.log("first")
     e.preventDefault();
-   await axios.post(`http://localhost:5000/otp/otpVerify`,{
+   try {
+    await axios.post(`http://localhost:5000/otp/otpVerify`,{
       email,
       secretCode,
-      // input
+      room
     })
     .then((data) =>{
       console.log(data)
@@ -50,6 +53,9 @@ const Otp: FC<otpProps> = ({
     .catch((e) =>{
       console.log(e)
     })
+   } catch (error) {
+    console.error(error);
+   }
   }
 
   return (
@@ -80,19 +86,24 @@ const Otp: FC<otpProps> = ({
                   type="email"
                   className="col-span-3"
                 />
-                {/* <Input
-                  id="paraurl"
-                  value={input || "hgfhffhjgcfffjjyjyytryd"}
+                <Label htmlFor="email" className="text-right">
+                  Room
+                </Label>
+                <Input
+                  id="room"
+                  value={room}
                   type="text"
                   className="col-span-3"
-                /> */}
+                  readOnly
+                  
+                />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="otp" className="text-right">
                   Otp
                 </Label>
                 <Input
-                  id="otp"
+                  id="secretCode"
                   value={secretCode}
                   type="number"
                   className="col-span-3"

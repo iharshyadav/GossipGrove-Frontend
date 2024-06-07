@@ -16,6 +16,8 @@ interface ContextProps {
     setSecretCode : Dispatch<SetStateAction<number>>,
     otp:number,
     setOtp : Dispatch<SetStateAction<number>>,
+    roomHandler :string,
+    setRoomHandler : Dispatch<SetStateAction<string>>
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -30,6 +32,8 @@ const GlobalContext = createContext<ContextProps>({
     setSecretCode : ():number => 0,
     otp:0,
     setOtp : ():string => '',
+    roomHandler : '',
+    setRoomHandler : ():string => '',
 })
 
 export const GlobalContextProvider = ({ children }: {children : ReactNode}) => {
@@ -40,6 +44,7 @@ export const GlobalContextProvider = ({ children }: {children : ReactNode}) => {
     const [email, setEmail] = useState<string>("")
     const [secretCode, setSecretCode] = useState<number>(0);
     const [otp, setOtp] = useState<number>(0)
+    const [roomHandler, setRoomHandler] = useState("")
 
 
     function url(){
@@ -61,7 +66,9 @@ export const GlobalContextProvider = ({ children }: {children : ReactNode}) => {
              otp,
              secretCode,
              setOtp,
-             setSecretCode
+             setSecretCode,
+             roomHandler,
+             setRoomHandler
              }}>
             {children}
         </GlobalContext.Provider>

@@ -8,7 +8,6 @@ export const createTopic = async ({topicName} : {topicName : string}) =>{
 
     const regex = /^[a-zA-Z-]+$/
 
-    // console.log(topicName)
 
     if(!topicName || topicName.length > 50){
         throw ({error : "Name must be between 1 and 50 chars" })
@@ -18,8 +17,10 @@ export const createTopic = async ({topicName} : {topicName : string}) =>{
         return { error: "Only letters and hyphens allowed in name" }
     }
 
+    
+    
     await redis.sadd("existing-topics", topicName);
-
+    
      redirect (`/${topicName}`)
 }
 
@@ -57,9 +58,9 @@ export const submitComment = async ({
    comment : string
    topicName : string
 }) =>{
-
+    
     const words = wordFreq(comment);
-
+    
     await Promise.all(
         words.map( async (word) => {
             await redis.zadd(
@@ -69,6 +70,7 @@ export const submitComment = async ({
             )
            })
           )
+
 
     await redis.incr("served-request")
 

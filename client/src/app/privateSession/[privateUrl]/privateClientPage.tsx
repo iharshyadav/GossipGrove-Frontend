@@ -151,7 +151,7 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData  }) => {
             </Button>
           </div>
           <div className="absolute bottom-20 right-36">
-           <Otp input = {input} />
+           <Otp input = {input} room={para.privateUrl} />
            </div>
         </div>
       </MaxWidthWrapper>

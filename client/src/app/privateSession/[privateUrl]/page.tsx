@@ -3,12 +3,14 @@ import { FC } from 'react'
 import PrivateClientPage from './privateClientPage';
 
 interface pageProps {
-  privateInput : string;
+  params : {
+    topic : string;
+  }
 }
 
-const page: FC<pageProps> = async ({ privateInput }) => {
+const page: FC<pageProps> = async ({ params }) => {
   
-    const topic = privateInput;
+    const topic = params;
 
     console.log(topic)
 

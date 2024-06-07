@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query"
 import { createTopic, createTopicParams } from "@/app/action"
 import { KeyRound, LockKeyhole } from "lucide-react"
 import { useGlobalContext } from "@/app/Context/store"
+import JoinRoom from "./joinRoom"
 
 
 const TopicCreator = () => {
@@ -72,6 +73,10 @@ const TopicCreator = () => {
           </Button>
       </div>
       {error2 ? <p className="text-sm text-red-600">{error2.message}</p> : null}
+
+      <div className="mt-8">
+        <JoinRoom />
+      </div>
     </>
   );
 }
