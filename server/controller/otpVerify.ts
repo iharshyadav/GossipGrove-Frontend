@@ -72,45 +72,34 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
   try {
     
     const { email , rooms , otp } = req.body;
-    
+
     if(!email || !rooms || !otp){
-      throw new Error("please fill all the details");
-      
-      }
-      
-      const findByEmail = await Otp.findOne({email});
-      
-      if(!findByEmail){
-        throw new Error("Failed to join room")
-        }
-        
-        const { room } = findByEmail;
-        
-        // console.log(room)  
-        // console.log(rooms)
+     throw new Error("please fill all the details");
+
+    }
+
+    const findByEmail = await Otp.findOne({email});
+
+    if(!findByEmail){
+      throw new Error("Failed to join room")
+    }
+
+    const { room } = findByEmail;
+
+    // console.log(room)  
+    // console.log(rooms)
 
     if(rooms != room){
      throw new Error("Please Enter the correct room Name")
-     }
-     
-     
-     const { secretCode } = findByEmail;
-     
-     if(otp != secretCode){
-       throw new Error ("Invalid Otp!!! Please try again!!!!")
-      }
-
-     const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
-    const origin = req.headers.origin;
-    console.log(req.headers);
-    console.log(origin)
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', '*');
     }
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader("Access-Control-Allow-Headers", "content-type");
-    res.setHeader("Access-Control-Max-Age", "1800");
-		res.setHeader("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, PATCH, OPTIONS");
+ 
+    
+    const { secretCode } = findByEmail;
+    
+    if(otp != secretCode){
+      throw new Error ("Invalid Otp!!! Please try again!!!!")
+      }
+      
     sendToken(res,findByEmail,200,"user entered successfully");
 
   } catch (error) {
@@ -120,6 +109,5 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
 
 
 export const hashedRoom = async (req:Request , res:Response) =>{
-
 
 }
