@@ -105,10 +105,12 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
     console.log(req.headers);
     console.log(origin)
     if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Origin', '*');
     }
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-      
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader("Access-Control-Max-Age", "1800");
+		res.setHeader("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, PATCH, OPTIONS");
     sendToken(res,findByEmail,200,"user entered successfully");
 
   } catch (error) {
