@@ -1,30 +1,90 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.otpSend = void 0;
+exports.hashedRoom = exports.getPrivateRoom = exports.postPrivateRoom = exports.otpSend = void 0;
 const otp_models_1 = require("../models/otp.models");
+const email_1 = require("../helper/email");
+const privateRoom_models_1 = require("../models/privateRoom.models");
+const features_1 = require("../utils/features");
 const otpSend = async (req, res) => {
-    console.log(req.body);
-    const { email, secretCode, paraurl } = req.body;
-    console.log(paraurl);
-    if (!email || !secretCode) {
-        throw new Error("please fill all the details");
+    try {
+        console.log(req.body);
+        const { email, secretCode, room } = req.body;
+        // console.log(paraurl)
+        if (!email || !secretCode || !room) {
+            throw new Error("please fill all the details");
+        }
+        const sameEmail = await otp_models_1.Otp.findOne({ email });
+        if (sameEmail) {
+            throw new Error("Otp already sent");
+        }
+        await (0, email_1.myfunction)(req, email, secretCode, res);
+        const otp = await otp_models_1.Otp.create({
+            email,
+            secretCode,
+            room
+        });
+        if (!otp) {
+            throw new Error("Not saved to database");
+        }
+        console.log(otp);
+        return res.status(200).json({
+            message: "Otp saved",
+            otp
+        });
     }
-    const sameEmail = await otp_models_1.Otp.findOne({ email });
-    if (sameEmail) {
-        throw new Error("Otp already sent");
+    catch (error) {
+        throw new Error("Unable to verify email please try again");
     }
-    const otp = await otp_models_1.Otp.create({
-        email,
-        secretCode
-    });
-    if (!otp) {
-        throw new Error("Not saved to database");
-    }
-    console.log(otp);
-    return res.status(200).json({
-        message: "Otp saved",
-        otp
-    });
 };
 exports.otpSend = otpSend;
+const postPrivateRoom = async (req, res) => {
+    try {
+        const { privateRoomName } = req.body;
+        if (!privateRoomName) {
+            throw new Error("please fill the Room name");
+        }
+        const room = await privateRoom_models_1.PrivateRoom.create({
+            privateRoomName
+        });
+        console.log(room);
+        return res.status(200).json({
+            room,
+            message: "room name stored"
+        });
+    }
+    catch (error) {
+        throw new Error("failed to storenroom");
+    }
+};
+exports.postPrivateRoom = postPrivateRoom;
+const getPrivateRoom = async (req, res) => {
+    try {
+        const { email, rooms, otp } = req.body;
+        if (!email || !rooms || !otp) {
+            throw new Error("please fill all the details");
+        }
+        const findByEmail = await otp_models_1.Otp.findOne({ email });
+        if (!findByEmail) {
+            throw new Error("Failed to join room");
+        }
+        const { room } = findByEmail;
+        // console.log(room)  
+        // console.log(rooms)
+        if (rooms != room) {
+            throw new Error("Please Enter the correct room Name");
+        }
+        const { secretCode } = findByEmail;
+        if (otp != secretCode) {
+            throw new Error("Invalid Otp!!! Please try again!!!!");
+        }
+        (0, features_1.sendToken)(res, findByEmail, 200, "user entered successfully");
+    }
+    catch (error) {
+        throw new Error("failed to store room");
+    }
+};
+exports.getPrivateRoom = getPrivateRoom;
+const hashedRoom = async (req, res) => {
+};
+exports.hashedRoom = hashedRoom;
 //# sourceMappingURL=otpVerify.js.map

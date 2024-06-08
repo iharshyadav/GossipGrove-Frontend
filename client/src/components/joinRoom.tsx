@@ -1,11 +1,12 @@
 "use client"
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { KeyRound } from 'lucide-react'
 import axios from 'axios'
 import { useGlobalContext } from '@/app/Context/store'
 import { useRouter } from 'next/navigation'
+import { middleware } from '@/middleware'
 
 interface joinRoomProps {
   
@@ -22,21 +23,31 @@ const [joinOtp, setJoinOtp] = useState<number>(0)
 const router = useRouter();
 
 
-
 const getVerified = async (e:React.FormEvent) =>{
   e.preventDefault();
+  const config = {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
   try {
-    console.log("first")
   await axios
     .post("http://localhost:5000/otp/getRoom", {
       email: joinRoomEmail,
       rooms: joinRoom,
       otp: joinOtp,
-    })
+    },
+   config
+  )
     .then((data) => {
       console.log(data)
-      router.push(`http://localhost:3000/privateSession/${joinRoom}`);
-    })
+      // console.log(roomHandler)
+      // console.log(data.data.token)
+      // middleware(data.data.room)
+        router.push(`/privateSession/${data.data.room}?roomName=${data.data.room}`);
+      })
     .catch((e) => {
       console.log(e);
     });

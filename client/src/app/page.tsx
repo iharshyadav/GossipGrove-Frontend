@@ -8,6 +8,9 @@ export default async function Home() {
 
   const servedRequest = await redis.get('served-request')
 
+  // const all = await redis.smembers("subscribed-rooms")
+  // console.log(all)
+
   return (
     <section className="min-h-screen bg-grid-zinc-50">
       <MaxWidthWrapper className="relative pb-24 pt-10 sm:pb-32 lg:pt-24 xl:pt-32 lg:pb-52">

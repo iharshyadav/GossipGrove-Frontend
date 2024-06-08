@@ -9,15 +9,14 @@ const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const ioredis_1 = require("ioredis");
 require("dotenv/config");
-const otp_route_1 = __importDefault(require("./routes/otp.route"));
 const db_1 = require("./database/db");
-const corsOptions = {
-    origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-};
+const otp_route_1 = __importDefault(require("./routes/otp.route"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+const corsOptions = {
+    origin: 'http://localhost:3000', // Allow only this origin to access
+    credentials: true, // Allow cookies and HTTP authentication
+};
 app.use((0, cors_1.default)(corsOptions));
 app.use('/otp', otp_route_1.default);
 const redis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
@@ -25,10 +24,10 @@ const subRedis = new ioredis_1.Redis(process.env.REDIS_CONNECTION_STRING);
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: ["http://localhost:3000", "https://realtime-webapp.vercel.app", "https://realtime-webapp-git-main-iharshyadavs-projects.vercel.app"],
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true,
-    },
+    }
 });
 subRedis.on("message", (channel, message) => {
     io.to(channel).emit("room-update", message);
@@ -40,7 +39,7 @@ io.on("connection", async (socket) => {
     const { id } = socket;
     // console.log(socket.id);
     socket.on("join-room", async (room) => {
-        console.log("joined room : ", room);
+        // console.log("joined room : ",room)
         const subscribedRooms = await redis.smembers("subscribed-rooms");
         await socket.join(room);
         await redis.sadd(`rooms:${id}`, room);
@@ -78,12 +77,10 @@ io.on("connection", async (socket) => {
         });
     });
 });
-app.get("/", (req, res) => {
-    res.json({
-        message: "hii harsh"
-    });
-});
 const PORT = process.env.PORT || 8080;
+// app.use('/',(req:Request,res:Response)=>{
+//   res.json({msg:"Server is live"})
+// })
 server.listen(PORT, async () => {
     await (0, db_1.dbConfig)();
     console.log(`Server is listening on port: ${PORT}`);

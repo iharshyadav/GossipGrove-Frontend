@@ -9,7 +9,14 @@ import otpRoute from "./routes/otp.route"
 
 const app = express()
 app.use(express.json())
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Allow only this origin to access
+  credentials: true, // Allow cookies and HTTP authentication
+};
+app.use(cors(
+  corsOptions
+));
 app.use('/otp',otpRoute)
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
@@ -38,7 +45,7 @@ io.on("connection",async (socket) =>{
   // console.log(socket.id);
 
   socket.on("join-room", async (room : string) =>{
-    console.log("joined room : ",room)
+    // console.log("joined room : ",room)
 
     const subscribedRooms = await redis.smembers("subscribed-rooms")
     await socket.join(room)

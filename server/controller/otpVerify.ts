@@ -92,7 +92,7 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
     if(rooms != room){
      throw new Error("Please Enter the correct room Name")
     }
-
+ 
     
     const { secretCode } = findByEmail;
     
@@ -105,4 +105,10 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
   } catch (error) {
     throw new Error ("failed to store room")
   }
+}
+
+
+export const hashedRoom = async (req:Request , res:Response) =>{
+
+  
 }

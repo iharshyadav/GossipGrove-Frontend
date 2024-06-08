@@ -14,8 +14,9 @@ const otpSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    paraurl: {
-        type: String
+    room: {
+        type: String,
+        required: true,
     }
 });
 exports.Otp = mongoose_1.default.models.Otp || mongoose_1.default.model("Otp", otpSchema);
