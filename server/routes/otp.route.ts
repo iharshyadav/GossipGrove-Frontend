@@ -14,7 +14,7 @@ route.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    // credentials: true,
+    credentials: true,
 }))
 route.post("/otpVerify",otpSend)
 route.post("/getRoom",getPrivateRoom)
