@@ -26,7 +26,7 @@ const router = useRouter();
 const getVerified = async (e:React.FormEvent) =>{
   e.preventDefault();
   const config = {
-    withCredentials: true,
+    // withCredentials: true,
     headers: {
       "Content-Type": "application/json",
     },
