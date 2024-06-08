@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json())
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow only this origin to access
+  origin: ['http://localhost:3000','https://realtime-webapp.vercel.app'], // Allow only this origin to access
   credentials: true, // Allow cookies and HTTP authentication
 };
 app.use(cors(
