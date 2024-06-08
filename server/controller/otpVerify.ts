@@ -68,39 +68,39 @@ export const postPrivateRoom = async (req:Request,res:Response) => {
   }
 }
 
-const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
 export const getPrivateRoom = async (req:Request,res:Response) => {
   try {
     
     const { email , rooms , otp } = req.body;
-
+    
     if(!email || !rooms || !otp){
-     throw new Error("please fill all the details");
-
-    }
-
-    const findByEmail = await Otp.findOne({email});
-
-    if(!findByEmail){
-      throw new Error("Failed to join room")
-    }
-
-    const { room } = findByEmail;
-
-    // console.log(room)  
-    // console.log(rooms)
+      throw new Error("please fill all the details");
+      
+      }
+      
+      const findByEmail = await Otp.findOne({email});
+      
+      if(!findByEmail){
+        throw new Error("Failed to join room")
+        }
+        
+        const { room } = findByEmail;
+        
+        // console.log(room)  
+        // console.log(rooms)
 
     if(rooms != room){
      throw new Error("Please Enter the correct room Name")
-    }
- 
-    
-    const { secretCode } = findByEmail;
-    
-    if(otp != secretCode){
-      throw new Error ("Invalid Otp!!! Please try again!!!!")
+     }
+     
+     
+     const { secretCode } = findByEmail;
+     
+     if(otp != secretCode){
+       throw new Error ("Invalid Otp!!! Please try again!!!!")
       }
 
+     const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
     const origin = req.headers.origin;
     console.log(req.headers);
     console.log(origin)
