@@ -4,7 +4,6 @@ import cors from "cors"
 
 const route = Router()
 
-route.post("/otpVerify",otpSend)
 // route.post("/roomSave",postPrivateRoom)
 const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
 route.use(cors({
@@ -17,6 +16,7 @@ route.use(cors({
     },
     credentials: true,
 }))
+route.post("/otpVerify",otpSend)
 route.post("/getRoom",getPrivateRoom)
 
 export default route;
