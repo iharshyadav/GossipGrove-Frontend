@@ -102,6 +102,8 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
       }
 
     const origin = req.headers.origin;
+    console.log(req.headers);
+    console.log(origin)
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
     }
