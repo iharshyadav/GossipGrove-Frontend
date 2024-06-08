@@ -34,7 +34,7 @@ const getVerified = async (e:React.FormEvent) =>{
 
   try {
   await axios
-    .post("https://realtime-webapp-6mww.vercel.app/otp/getRoom", {
+    .post("https://realtime-webapp-backend.vercel.app/otp/getRoom", {
       email: joinRoomEmail,
       rooms: joinRoom,
       otp: joinOtp,

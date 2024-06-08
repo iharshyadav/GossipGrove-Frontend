@@ -93,9 +93,9 @@ io.on("connection",async (socket) =>{
 
 const PORT = process.env.PORT || 8080
 
-// app.use('/',(req:Request,res:Response)=>{
-//   res.json({msg:"Server is live"})
-// })
+app.use('/',(req:Request,res:Response)=>{
+  res.json({msg:"Server is live"})
+})
 server.listen(PORT, async () => {
   await dbConfig();
   console.log(`Server is listening on port: ${PORT}`)
