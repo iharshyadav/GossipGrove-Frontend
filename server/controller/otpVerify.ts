@@ -99,6 +99,13 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
     if(otp != secretCode){
       throw new Error ("Invalid Otp!!! Please try again!!!!")
       }
+
+    const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
       
     sendToken(res,findByEmail,200,"user entered successfully");
 
@@ -109,5 +116,6 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
 
 
 export const hashedRoom = async (req:Request , res:Response) =>{
+
 
 }
