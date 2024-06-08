@@ -6,7 +6,7 @@ const route = Router()
 
 route.post("/otpVerify",otpSend)
 // route.post("/roomSave",postPrivateRoom)
-const allowedOrigins = ['http://localhost:3000', 'https://realtime-webapp.vercel.app'];
+const allowedOrigins = ['https://realtime-webapp.vercel.app', 'http://localhost:3000'];
 route.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
