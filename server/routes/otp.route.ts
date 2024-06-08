@@ -7,7 +7,7 @@ const route = Router()
 route.post("/otpVerify",otpSend)
 // route.post("/roomSave",postPrivateRoom)
 route.use(cors({
-    origin: 'http://localhost:3000', // Allow only this origin to access
+    origin: ['http://localhost:3000', 'https://realtime-webapp.vercel.app'], // Allow only this origin to access
     credentials: true, 
 }))
 route.post("/getRoom",getPrivateRoom)
