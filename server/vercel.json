@@ -1,16 +1,19 @@
 {
     "version": 2,
     "builds": [
-        {
-            "src": "server.ts",
-            "use": "@vercel/node",
-            "config": { "includeFiles": ["public/**"] }
-        }
+      {
+        "src": "server.ts",
+        "use": "@vercel/node"
+      }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "public/server.ts"
-        }
+      {
+        "src": "/otp/getRoom",
+        "dest": "server.ts"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "server.ts"
+      }
     ]
-}
+  }
