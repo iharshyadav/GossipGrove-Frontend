@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import { redis } from './lib/redis'
+import { redis } from '../client/src/lib/redis'
  
 // This function can be marked `async` if using `await` inside
 // const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
