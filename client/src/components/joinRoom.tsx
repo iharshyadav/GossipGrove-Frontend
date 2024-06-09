@@ -6,7 +6,6 @@ import { KeyRound } from 'lucide-react'
 import axios from 'axios'
 import { useGlobalContext } from '@/app/Context/store'
 import { useRouter } from 'next/navigation'
-import { middleware } from '@/middleware'
 
 interface joinRoomProps {
   
