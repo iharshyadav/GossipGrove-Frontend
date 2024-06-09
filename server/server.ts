@@ -26,6 +26,7 @@ const corsOptions = {
 app.use(cors(
   corsOptions
 ));
+app.options('*', cors(corsOptions));
 app.use('/otp',otpRoute)
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
