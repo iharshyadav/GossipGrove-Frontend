@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
-const priavteRoomSchema = new mongoose.Schema ({
-    privateRoomName : {
+const userSchema = new mongoose.Schema ({
+    email : {
         type : String,
         required : true,
     },
+    password:{
+        type : String,
+        required : true
+    }
     
 })
 
-export const PrivateRoom = mongoose.models.PrivateRoom || mongoose.model("Room",priavteRoomSchema);
+export const User = mongoose.models.User || mongoose.model("User",userSchema);

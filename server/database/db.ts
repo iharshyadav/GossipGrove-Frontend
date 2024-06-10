@@ -9,4 +9,4 @@ export const dbConfig = async () =>{
     throw new Error(error);
    }
 
-}
+} 

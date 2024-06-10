@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPrivateRoom, otpSend, postPrivateRoom } from "../controller/otpVerify";
+import { getPrivateRoom, otpSend, login } from "../controller/otpVerify";
 import cors from "cors"
 
 const route = Router()

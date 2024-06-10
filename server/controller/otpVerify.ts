@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Otp } from "../models/otp.models";
 import { myfunction } from "../helper/email";
-import { PrivateRoom } from "../models/privateRoom.models";
 import { sendToken } from "../utils/features";
 
 export const otpSend = async (req:Request,res:Response) =>{
@@ -46,24 +45,11 @@ export const otpSend = async (req:Request,res:Response) =>{
 
 }
 
-export const postPrivateRoom = async (req:Request,res:Response) => {
+export const login = async (req:Request,res:Response) => {
   try {
-    const { privateRoomName } = req.body;
-    if(!privateRoomName){
-      throw new Error ("please fill the Room name")
-    }
-    
-    const room = await PrivateRoom.create ({
-      privateRoomName
-    })
 
-    console.log(room);
-
-    return res.status(200).json({
-      room,
-      message : "room name stored"
-    })
   } catch (error) {
+
     throw new Error ("failed to storenroom")
   }
 }
