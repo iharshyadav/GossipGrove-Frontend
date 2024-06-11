@@ -6,40 +6,19 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 import { dbConfig } from "./database/db"
 import otpRoute from "./routes/otp.route"
-import passport from "passport"
-import authRoute from "./routes/auth.route"
-import cookieSession from "cookie-session"
-import session from "express-session"
 
 const app = express()
 
 app.use(express.json())
 
-app.use(
-  cookieSession({ name: "session", keys: ["afhwg"], maxAge: 24 * 60 * 60 * 100 })
-);
-
-app.use(
-  session({
-     secret: process.env.SESSION_SECRET!,
-     resave: false,
-     saveUninitialized: false,
-     cookie: {},
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 const corsOptions = {
   origin: process.env.CLIENT_URL,
-  methods: "GET,POST,PUT,DELETE",
+  methods: ["GET","POST","PUT","DELETE"],
   credentials: true,
 };
 app.use(cors(corsOptions));
 
 // Routes
-app.use("/auth", authRoute);
 app.use('/otp', otpRoute);
 
 const redis = new Redis(process.env.REDIS_CONNECTION_STRING)
@@ -117,11 +96,10 @@ io.on("connection",async (socket) =>{
 
 const PORT = process.env.PORT || 8080
 
-// dh
-
 app.get('/',(req:Request,res:Response)=>{
   res.json({msg:"Server is live"})
 })
+
 server.listen(PORT, async () => {
   await dbConfig();
   console.log(`Server is listening on port: ${PORT}`)
