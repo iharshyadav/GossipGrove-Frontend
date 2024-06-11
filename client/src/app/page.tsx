@@ -1,12 +1,15 @@
 import { Icons } from "@/components/Icons"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import TopicCreator from "@/components/TopicCreator"
+import getCurrentUser from "@/lib/currentSession"
 import { redis } from "@/lib/redis"
 import { Star } from "lucide-react"
 
 export default async function Home() {
 
   const servedRequest = await redis.get('served-request')
+
+  const current = await getCurrentUser();
 
   // const all = await redis.smembers("subscribed-rooms")
   // console.log(all)
@@ -19,6 +22,7 @@ export default async function Home() {
         </div>
 
         <div className="px-6 lg:px-0 lg:pt-4">
+          
           <div className="relative mx-auto text-center flex flex-col items-center">
             <h1 className="relative leading-snug w-fit tracking-tight text-balance mt-16 font-bold text-gray-900 text-5xl md:text-6xl">
               What do you{" "}

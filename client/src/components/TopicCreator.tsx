@@ -8,6 +8,8 @@ import { createTopic, createTopicParams } from "@/app/action"
 import { KeyRound, LockKeyhole } from "lucide-react"
 import { useGlobalContext } from "@/app/Context/store"
 import JoinRoom from "./joinRoom"
+import { signIn } from "next-auth/react"
+import { FcGoogle } from "react-icons/fc"
 
 
 const TopicCreator = () => {
@@ -77,6 +79,10 @@ const TopicCreator = () => {
       <div className="mt-8">
         <JoinRoom />
       </div>
+
+      <Button onClick={()=>signIn("google")} className="p-6 text-md mt-7">
+        <FcGoogle /> <span className="ml-2"></span>Log In with Google
+      </Button>
     </>
   );
 }
