@@ -23,7 +23,7 @@ export const authOptions: AuthOptions = {
     async signIn({ user, account, profile }) {
       try {
         console.log('Starting signIn callback');
-        await dbConnect(); 
+        await dbConnect();
         console.log('Database connected');
   
         const existingUser = await User.findOne({ email: user.email });
@@ -40,6 +40,7 @@ export const authOptions: AuthOptions = {
         return false;
       }
     },
+  },
 }
 
 export default NextAuth(authOptions);
