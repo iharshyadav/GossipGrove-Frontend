@@ -36,10 +36,10 @@ export const authOptions: AuthOptions = {
 
         }
         console.log("completed")
-        return existingUser;
+        return true;
       } catch (error) {
         console.error('Error in signIn callback', error);
-        return error;
+        return false;
       }
     },
   },

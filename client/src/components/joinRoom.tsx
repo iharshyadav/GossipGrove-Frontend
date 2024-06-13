@@ -78,7 +78,6 @@ const getVerified = async (e:React.FormEvent) =>{
             className="bg-white min-w-48"
             placeholder="Enter email here..."
             readOnly
-            type='hidden'
           />
           <Input
             value={joinRoom}
