@@ -42,7 +42,7 @@ const getVerified = async (e:React.FormEvent) =>{
 
   try {
   await axios
-    .post("http://localhost:5000/otp/getRoom", {
+    .post(`${process.env.NEXT_PUBLIC_BASE_URL}/otp/getRoom`, {
       email: mail,
       rooms: joinRoom,
       otp: joinOtp,

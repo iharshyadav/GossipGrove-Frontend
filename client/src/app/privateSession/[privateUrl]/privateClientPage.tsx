@@ -13,7 +13,7 @@ import { io } from "socket.io-client"
 import { submitComment } from "@/app/action";
 import Otp from "@/components/otp";
 
-const socket = io("http://localhost:5000")
+const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`)
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];

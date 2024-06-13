@@ -1,4 +1,3 @@
-"use client"
 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { FC, useEffect, useState } from "react";
@@ -12,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { submitComment } from "../action";
 import { io } from "socket.io-client"
 
-const socket = io("http://localhost:5000")
+const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`)
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];

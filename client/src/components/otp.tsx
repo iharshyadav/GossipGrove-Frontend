@@ -42,7 +42,7 @@ const Otp: FC<otpProps> = ({
     console.log("first")
     e.preventDefault();
    try {
-    await axios.post(`http://localhost:5000/otp/otpVerify`,{
+    await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/otp/otpVerify`,{
       email,
       secretCode,
       room
