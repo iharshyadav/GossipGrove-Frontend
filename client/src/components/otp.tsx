@@ -16,8 +16,6 @@ import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { useGlobalContext } from '@/app/Context/store'
 import axios from 'axios'
-import StoreRoom from '@/app/models/rooms.schema'
-import { saveOtpStoreRoom } from '@/app/action'
   
 
 interface otpProps {
