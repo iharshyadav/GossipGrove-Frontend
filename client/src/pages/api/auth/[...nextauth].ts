@@ -22,19 +22,24 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        await dbConnect(); // Ensure DB connection
-
+        console.log('Starting signIn callback');
+        await dbConnect(); 
+        console.log('Database connected');
+  
         const existingUser = await User.findOne({ email: user.email });
         if (!existingUser) {
-          await User.create({ email: user.email,name: user.name,image:profile?.image});
-        } 
+          console.log('Creating new user');
+          await User.create({ email: user.email, name: user.name, image: profile?.image });
+          console.log('User created');
+        } else {
+          console.log('User already exists');
+        }
         return true;
       } catch (error) {
-        console.error('Error saving user to database', error);
+        console.error('Error in signIn callback', error);
         return false;
       }
     },
-  },
 }
 
 export default NextAuth(authOptions);
