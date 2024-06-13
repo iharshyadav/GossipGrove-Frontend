@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
   },
   secret : process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, profile }) {
       try {
         console.log('Starting signIn callback');
         await dbConnect();
@@ -33,11 +33,13 @@ export const authOptions: AuthOptions = {
           console.log('User created');
         } else {
           console.log('User already exists');
+
         }
-        return true;
+        console.log("completed")
+        return existingUser;
       } catch (error) {
         console.error('Error in signIn callback', error);
-        return false;
+        return error;
       }
     },
   },
