@@ -5,7 +5,7 @@ import { Button } from './ui/button'
 import { KeyRound } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { roomDetails, saveOtpStoreRoom } from '@/app/action'
+import { roomDetails } from '@/app/action'
 
 interface joinRoomProps {
   mail : string;
@@ -55,7 +55,7 @@ const getVerified = async (e:React.FormEvent) =>{
       // console.log(data.data.token)
       // middleware(data.data.room)
         // saveOtpStoreRoom(joinRoomEmail , joinRoom)
-        router.push(`/privateSession/${data.data.room}`);
+        router.push(`/privateSession/${joinRoom}`);
       })
     .catch((e) => {
       console.log(e);

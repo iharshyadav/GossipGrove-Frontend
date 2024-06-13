@@ -155,20 +155,20 @@ export const roomDetails = async (joinRoom : string) => {
   return true;
 };
 
-export const saveOtpStoreRoom = async (email:string,room : string | string[]) => {
+// export const saveOtpStoreRoom = async (email:string,room : string | string[]) => {
     
-    const currentdataInStoreRoom = await StoreRoom.findOne({email})
+//     const currentdataInStoreRoom = await StoreRoom.findOne({email})
 
-    if (!currentdataInStoreRoom) {
-        await StoreRoom.create({
-            email,
-            isAdmin: true,
-            roomName: [room]
-        });
-        console.log("new user Added successfully to storeRoom")
-    } else {
-        currentdataInStoreRoom.roomName.push(room);
-        await currentdataInStoreRoom.save();
-        console.log("user roomName added successfully")
-    }
-}
+//     if (!currentdataInStoreRoom) {
+//         await StoreRoom.create({
+//             email,
+//             isAdmin: true,
+//             roomName: [room]
+//         });
+//         console.log("new user Added successfully to storeRoom")
+//     } else {
+//         currentdataInStoreRoom.roomName.push(room);
+//         await currentdataInStoreRoom.save();
+//         console.log("user roomName added successfully")
+//     }
+// }
