@@ -4,26 +4,35 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { KeyRound } from 'lucide-react'
 import axios from 'axios'
-import { useGlobalContext } from '@/app/Context/store'
 import { useRouter } from 'next/navigation'
+import { roomDetails, saveOtpStoreRoom } from '@/app/action'
 
 interface joinRoomProps {
-  
+  mail : string;
 }
 
-const JoinRoom: FC<joinRoomProps> = ({}) => {
-
-const { roomHandler , setRoomHandler } = useGlobalContext();
-
+const JoinRoom: FC<joinRoomProps> = ({
+  mail
+}) => {
 const [joinRoomEmail, setJoinRoomEmail] = useState<string>("")
 const [joinRoom, setJoinRoom] = useState<string>("")
 const [joinOtp, setJoinOtp] = useState<number>(0)
 
 const router = useRouter();
 
-
 const getVerified = async (e:React.FormEvent) =>{
+
+  // const currentUser = await getCurrentUser(); 
   e.preventDefault();
+
+  
+  const currentRoom = await roomDetails(joinRoom);
+  
+  if(currentRoom !== true){
+    return;
+    }
+  console.log("first")
+
   const config = {
     withCredentials: true,
     headers: {
@@ -33,8 +42,8 @@ const getVerified = async (e:React.FormEvent) =>{
 
   try {
   await axios
-    .post("https://realtime-webapp-backend.vercel.app/otp/getRoom", {
-      email: joinRoomEmail,
+    .post("http://localhost:5000/otp/getRoom", {
+      email: mail,
       rooms: joinRoom,
       otp: joinOtp,
     },
@@ -45,7 +54,8 @@ const getVerified = async (e:React.FormEvent) =>{
       // console.log(roomHandler)
       // console.log(data.data.token)
       // middleware(data.data.room)
-        router.push(`/privateSession/${data.data.room}?roomName=${data.data.room}`);
+        // saveOtpStoreRoom(joinRoomEmail , joinRoom)
+        router.push(`/privateSession/${data.data.room}`);
       })
     .catch((e) => {
       console.log(e);
@@ -63,10 +73,12 @@ const getVerified = async (e:React.FormEvent) =>{
       </h1>
         <form className="flex gap-2" action="" onSubmit={getVerified}>
           <Input
-            value={joinRoomEmail}
-            onChange={({ target }) => setJoinRoomEmail(target.value)}
+            value={mail}
+            // onChange={({ target }) => setJoinRoomEmail(target.value)}
             className="bg-white min-w-48"
             placeholder="Enter email here..."
+            readOnly
+            type='hidden'
           />
           <Input
             value={joinRoom}

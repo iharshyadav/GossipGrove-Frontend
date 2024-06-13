@@ -10,9 +10,18 @@ import { useGlobalContext } from "@/app/Context/store"
 import JoinRoom from "./joinRoom"
 import { signIn } from "next-auth/react"
 import { FcGoogle } from "react-icons/fc"
+import GoogleLogin from "./googleLogin"
+
+interface TopicCreatorProps {
+  current : boolean;
+  mail : string;
+}
 
 
-const TopicCreator = () => {
+const TopicCreator:React.FC<TopicCreatorProps> = ({
+  current,
+  mail
+}) => {
   const [input, setInput] = useState<string>("");
   const { privateInput, setPrivateInput } = useGlobalContext();
 
@@ -63,7 +72,9 @@ const TopicCreator = () => {
             className="bg-white min-w-64"
             placeholder="Enter topic here..."
           />
-          <Button
+
+          {
+            current ? <Button
             disabled={isPending2}
             type="submit"
             onClick={() => mutate2({ topicName: privateInput})}
@@ -72,12 +83,15 @@ const TopicCreator = () => {
             <span className="ml-1">
               <LockKeyhole size={17} />
             </span>
-          </Button>
+          </Button> : <GoogleLogin />
+          }
+          
+          
       </div>
       {error2 ? <p className="text-sm text-red-600">{error2.message}</p> : null}
 
       <div className="mt-8">
-        <JoinRoom />
+        <JoinRoom mail={mail} />
       </div>
 
       <Button onClick={()=>signIn("google")} className="p-6 text-md mt-7">

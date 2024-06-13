@@ -39,7 +39,7 @@ export default async function Home() {
               about...
             </h1>
 
-            <TopicCreator />
+            <TopicCreator current={current !== null} mail={current?.currentUser.email}/>
 
             <div className="mt-12 flex flex-col sm:flex-row items-cemter sm:items-start gap-5">
               <div className="flex flex-col gap-1 justify-between items-center">

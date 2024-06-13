@@ -11,30 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { io } from "socket.io-client"
 import { submitComment } from "@/app/action";
-import { useParams } from "next/navigation";
 import Otp from "@/components/otp";
 
 const socket = io("http://localhost:5000")
 
 interface clientPageProps {
   initialData: { text: string; value: number }[];
-  // topicName: string;
+  topicName: string
 }
 
 const COLORS = ["#143059", "#2F6B9A", "#82a6c2"]
 
-const PrivateClientPage: FC<clientPageProps> = ({ initialData  }) => {
+const PrivateClientPage: FC<clientPageProps> = ({ initialData ,topicName }) => {
 
   const [words, setWords] = useState(initialData);
   const [input,setInput] = useState<string>("")
 
-  const para = useParams()
-
-  // console.log(para.privateUrl)
-
-  // const topicName:string= para.privateUrl;
-
-  const topicName:string = Array.isArray(para.privateUrl) ? para.privateUrl[0] : para.privateUrl;
 
   useEffect(()=>{
     socket.emit("join-room",`room:${topicName}`);
@@ -151,7 +143,7 @@ const PrivateClientPage: FC<clientPageProps> = ({ initialData  }) => {
             </Button>
           </div>
           <div className="absolute bottom-20 right-36">
-           <Otp input = {input} room={para.privateUrl} />
+           <Otp input = {input} room={topicName} />
            </div>
         </div>
       </MaxWidthWrapper>

@@ -1,25 +1,24 @@
+"use client"
+
 import { redis } from '@/lib/redis';
 import { FC } from 'react'
 import PrivateClientPage from './privateClientPage';
 
 interface pageProps {
   params : {
-    topic : string;
+    privateUrl : string;
   }
 }
 
 const page: FC<pageProps> = async ({ params }) => {
-  
-    const topic = params;
+    const { privateUrl } = params;
 
-    console.log(topic)
+    console.log(privateUrl)
 
     const initialData = await redis.zrange<(string | number)[]> (
-        `room:${topic}`,0,49,{
+        `room:${privateUrl}`,0,49,{
             withScores : true
         })
-
-       
 
     const words : {text : string; value : number}[] = [];    
 
@@ -32,11 +31,9 @@ const page: FC<pageProps> = async ({ params }) => {
           }
     }
 
-   
-
     await redis.incr("served-request")
 
-    return <PrivateClientPage initialData={words} />
+    return <PrivateClientPage initialData={words} topicName={privateUrl} />
 }
 
 export default page

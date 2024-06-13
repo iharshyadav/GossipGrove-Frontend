@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Otp } from "../models/otp.models";
 import { myfunction } from "../helper/email";
-import { sendToken } from "../utils/features";
+import { saveOtpStoreRoom } from "../utils/features";
 
 export const otpSend = async (req:Request,res:Response) =>{
 
@@ -15,11 +15,12 @@ export const otpSend = async (req:Request,res:Response) =>{
    }
  
    const sameEmail = await Otp.findOne({email});
- 
-   if(sameEmail){
-      throw new Error ("Otp already sent");
-   }
 
+   
+   if(sameEmail){
+     throw new Error ("Otp already sent");
+     }
+     
    await myfunction(req,email,secretCode,res);
  
    const otp = await Otp.create({
@@ -84,9 +85,24 @@ export const getPrivateRoom = async (req:Request,res:Response) => {
     
     if(otp != secretCode){
       throw new Error ("Invalid Otp!!! Please try again!!!!")
-      }
-      
-    sendToken(res,findByEmail,200,"user entered successfully");
+    }
+
+    saveOtpStoreRoom(email , room)
+
+    const deleteotp = await Otp.findOneAndDelete({email});
+
+    if(!deleteotp){
+      throw new Error ("Enable to delete Otp");
+    }
+    // sendToken(res,findByEmail,200,"user entered successfully");
+
+    return res.status(200).json({
+      success:true,
+      message : "user otp is correct",
+      deleteotp
+      // token, 
+      // room:decoded.room
+  }) 
 
   } catch (error) {
     throw new Error ("failed to store room")

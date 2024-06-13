@@ -1,5 +1,6 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken"
+import StoreRoom from "../models/rooms.models";
 
 
 interface cookie {
@@ -38,4 +39,22 @@ export const sendToken = (res:Response,otpDetails:otpInterface,code:number,messa
       room:decoded.room
   }) 
       
+}
+
+export const saveOtpStoreRoom = async (email:string,room : string | string[]) => {
+    
+    const currentdataInStoreRoom = await StoreRoom.findOne({email})
+
+    if (!currentdataInStoreRoom) {
+        await StoreRoom.create({
+            email,
+            isAdmin: true,
+            roomName: [room]
+        });
+        console.log("new user Added successfully to storeRoom")
+    } else {
+        currentdataInStoreRoom.roomName.push(room);
+        await currentdataInStoreRoom.save();
+        console.log("user roomName added successfully")
+    }
 }
