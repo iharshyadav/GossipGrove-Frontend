@@ -23,10 +23,10 @@ export const authOptions: AuthOptions = {
     async signIn({ user, profile }) {
       try {
         console.log('Starting signIn callback');
+        const existingUser = await User.findOne({ email: user.email });
         await dbConnect();
         console.log('Database connected');
   
-        const existingUser = await User.findOne({ email: user.email });
         if (!existingUser) {
           console.log('Creating new user');
           const users = await User.create({ email: user.email, name: user.name, image: profile?.image });
