@@ -29,17 +29,18 @@ export const authOptions: AuthOptions = {
         const existingUser = await User.findOne({ email: user.email });
         if (!existingUser) {
           console.log('Creating new user');
-          await User.create({ email: user.email, name: user.name, image: profile?.image });
+          const users = await User.create({ email: user.email, name: user.name, image: profile?.image });
           console.log('User created');
+          return users;
         } else {
           console.log('User already exists');
-
+          return existingUser;
         }
-        console.log("completed")
-        return true;
+        // console.log("completed") 
+        // return true;
       } catch (error) {
         console.error('Error in signIn callback', error);
-        return false;
+        return error;
       }
     },
   },
