@@ -4,6 +4,12 @@ import { dbConnect } from "@/lib/mogoDb";
 import NextAuth, { AuthOptions } from "next-auth"; 
 import GoogleProvider from "next-auth/providers/google"
 
+dbConnect().then(() => {
+  console.log('Database connected');
+}).catch(err => {
+  console.error('Database connection error', err);
+});
+
 export const authOptions: AuthOptions = {
   providers:[
     GoogleProvider({
@@ -24,7 +30,7 @@ export const authOptions: AuthOptions = {
       try {
         console.log('Starting signIn callback');
         const existingUser = await User.findOne({ email: user.email });
-        await dbConnect();
+        // await dbConnect();
         console.log('Database connected');
   
         if (!existingUser) {
@@ -40,7 +46,7 @@ export const authOptions: AuthOptions = {
         // return true;
       } catch (error) {
         console.error('Error in signIn callback', error);
-        return error;
+        throw new Error('Sign in failed');
       }
     },
   },
