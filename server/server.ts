@@ -29,7 +29,7 @@ const io = new Server(server,{
   cors: {
     origin:['https://realtime-webapp.vercel.app','http://localhost:3000'],
     methods: ["GET", "POST"],
-    credentials: true,
+    // credentials: true,
   }
 });
 
