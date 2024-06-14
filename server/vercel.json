@@ -6,20 +6,6 @@
         "use": "@vercel/node"
       }
     ],
-    "routes": [
-      {
-        "src": "/otp/getRoom",
-        "dest": "server.ts"
-      },
-      {
-        "src": "/otp/otpVerify",
-        "dest": "server.ts"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "server.ts"
-      }
-    ],
     "rewrites": [
     {
       "source": "/otp/(.*)",
