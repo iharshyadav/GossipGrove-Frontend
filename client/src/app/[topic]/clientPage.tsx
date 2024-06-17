@@ -54,8 +54,8 @@ const ClientPage: FC<clientPageProps> = ({ initialData, topicName }) => {
       if(isWordAlreadyExist){
 
         setWords((prev) =>{
-          const before = words.find(word => word.text === newWord.text)
-          const after = words.filter(word => word.text === newWord.text)
+          const before = prev.find(word => word.text === newWord.text)
+          const after = prev.filter(word => word.text === newWord.text)
 
           return [
             ...after,

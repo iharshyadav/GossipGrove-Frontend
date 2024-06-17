@@ -6,29 +6,10 @@
         "use": "@vercel/node"
       }
     ],
-    "rewrites": [
-    {
-      "source": "/otp/(.*)",
-      "destination": "https://realtime-webapp-backend.vercel.app/otp/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/otp/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "https://realtime-webapp.vercel.app"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Origin, X-Requested-With, Content-Type, Accept"
-        }
-      ]
-    }
-  ]
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "server.ts"
+      }
+    ]
   }

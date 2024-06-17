@@ -6,17 +6,22 @@ import { Redis } from "ioredis"
 import "dotenv/config"
 import { dbConfig } from "./database/db"
 import otpRoute from "./routes/otp.route"
+import cookieparser from "cookie-parser"
 
 const app = express()
-
-app.use(express.json())
 
 const corsOptions = {
   origin: process.env.CLIENT_URL,
   methods: ["GET","POST","PUT","DELETE"],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieparser())
+app.use(express.json())
+
+
 
 // Routes
 app.use('/otp', otpRoute);
@@ -27,9 +32,9 @@ const subRedis = new Redis(process.env.REDIS_CONNECTION_STRING)
 const server = http.createServer(app);
 const io = new Server(server,{
   cors: {
-    origin:['https://realtime-webapp.vercel.app','http://localhost:3000'],
+    origin:['https://realtime-webapp.vercel.app','http://localhost:3000','http://localhost:3001'],
     methods: ["GET", "POST"],
-    // credentials: true,
+    credentials: true,
   }
 });
 

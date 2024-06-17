@@ -1,7 +1,5 @@
-import path from "path"
 import nodemailer from "nodemailer"
-import fs from "fs"
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 
 export const myfunction = async (req:Request,email:string,secretCode : string ,res:Response) => {
     try {
